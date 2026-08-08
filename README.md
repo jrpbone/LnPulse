@@ -8,7 +8,8 @@ This is my first-ever full-stack application.
 
 - John Ralph P. Bone
 - Dan Emmanuel G. Pispis
-
+- John Benedict B. Candelaria
+  
 ## Built using
 
 - React, JavaScript, and CSS for the frontend
