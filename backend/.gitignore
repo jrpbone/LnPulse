@@ -1,0 +1,8 @@
+# Backend-local ignores (repository-wide rules are in /.gitignore)
+node_modules/
+coverage/
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.log

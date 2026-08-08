@@ -1,0 +1,482 @@
+  .student-table tbody tr:last-child td {
+      border-bottom: none;
+  }
+
+  .student-panel {
+      background-color: #f5f6fa;
+      padding: 30px;
+      border-radius: 16px;
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 2000px;
+      margin: 30px auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  }
+
+  .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+  }
+  
+  .title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+  }
+
+  .student-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 32px;
+      background-color: #e0e7ff;
+      color: #1E90FF;
+      font-size: 16px;
+      font-weight: 600;
+      margin-left: 8px;
+      border-radius: 12px;
+      padding-bottom: 2px;
+  }
+
+  .add{
+      background-color: #1E90FF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+  }
+
+  .add:hover {
+      background-color: white;
+      color: #1E90FF;
+      border: 1px solid #1E90FF;
+      
+  }
+
+
+
+  .table-wrapper {
+      overflow-x: auto;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      min-height: 600px;
+  }
+
+  .student-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      table-layout: fixed;
+  }
+
+  .student-table thead {
+      background-color: #1E90FF;
+      text-align: center;
+  }
+
+  .student-table th, .student-table td {
+      padding: 14px 16px;
+      border: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+  }
+
+  .student-table tbody tr:nth-child(odd) {
+      background-color: #f5f5f5; /* light gray */ /*gpt to boy HAHAHHA*/
+  }
+
+  .student-table tbody tr:nth-child(even) {
+      background-color: #d3d3d3; /* slightly darker gray */ /*gpt to boy HAHAHHA*/
+  }
+
+  .view-button {
+      background-color: 	#ff7400;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+  }
+
+  .view-button:hover {
+      background-color: white;
+      color: #1E90FF;
+      border: 1px solid #1E90FF;
+  }
+
+  .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+  }
+
+  .items-per-page {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+  }
+
+  .items-per-page select {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    font-size: 14px;
+    min-width: 70px;
+    transition: all 0.2s ease;
+  }
+
+  .items-per-page select:hover {
+    border-color: #1E90FF;
+  }
+
+  .items-per-page select:focus {
+    outline: none;
+    border-color: #1E90FF;
+    box-shadow: 0 0 0 2px rgba(30, 144, 255, 0.1);
+  }
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    margin-top: 20px;
+    padding: 20px 0;
+  }
+
+  .page-btn {
+    padding: 8px;
+    border: 1px solid #1E90FF;
+    background-color: white;
+    color: #1E90FF;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: unset;
+    margin: 0px;
+  }
+
+  .page-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .page-btn:hover:not(:disabled) {
+    background-color: #1E90FF;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(30, 144, 255, 0.2);
+  }
+
+  .page-btn:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+    border-color: #ddd;
+  }
+
+  .page-btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  .current-page {
+    color: #333;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 0 10px;
+    min-width: 150px;
+    text-align: center;
+  }
+
+  .pagination-info {
+    margin-left: 20px;
+    color: #666;
+    font-size: 14px;
+  }
+
+  .edit-student-button {
+      background-color: #1E90FF;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      margin-left: 5px;
+  }
+
+  .edit-student-button:hover {
+      background-color: white;
+      color: #1E90FF;
+      border: 1px solid #1E90FF;
+  }
+
+  .papel-button {
+      background-color: #9fa728;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      margin-left: 5px;
+  }
+
+  .papel-button:hover {
+      background-color: white;
+      color: #1E90FF;
+      border: 1px solid #1E90FF;
+  }
+
+  /* Add these styles for the status indicators */
+  .status-badge {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-weight: 500;
+    text-align: center;
+    display: inline-block;
+    min-width: 80px;
+    border-width: 2px;
+    border-style: solid;
+    opacity: 0.8;
+  }
+
+  .status-active {
+    background-color: #32CD32;
+    color: #008000;
+    border-color: #67c46799;
+  }
+
+  .status-inactive {
+    background-color: #FF0000;
+    color:#FF0000;
+    border-color: #ff000073;
+  }
+
+  /* Define fixed widths for each column */
+  .student-table th:nth-child(1),
+  .student-table td:nth-child(1) {
+      width: 12%; /* Student ID */
+  }
+
+  .student-table th:nth-child(2),
+  .student-table td:nth-child(2) {
+      width: 20%; /* Name */
+  }
+
+  .student-table th:nth-child(3),
+  .student-table td:nth-child(3) {
+      width: 8%; /* Gender */
+  }
+
+  .student-table th:nth-child(4),
+  .student-table td:nth-child(4) {
+      width: 12%; /* Contact Number */
+  }
+
+  .student-table th:nth-child(5),
+  .student-table td:nth-child(5) {
+      width: 15%; /* Email */
+  }
+
+  .student-table th:nth-child(6),
+  .student-table td:nth-child(6) {
+      width: 8%; /* Status */
+  }
+
+  .student-table th:nth-child(7),
+  .student-table td:nth-child(7) {
+      width: 10%; /* Date Created */
+  }
+
+  .student-table th:nth-child(8),
+  .student-table td:nth-child(8) {
+      width: 10%; /* Date Updated */
+  }
+
+  .student-table th:nth-child(9),
+  .student-table td:nth-child(9) {
+      width: 15%; /* Actions */
+  }
+
+  /* Ensure consistent row height */
+  .student-table tr {
+      height: 60px; /* Fixed height for all rows */
+  }
+
+  /* Add hover tooltip for truncated content */
+  .student-table td {
+      position: relative;
+  }
+
+  .student-table td:hover::after {
+      content: attr(data-full-text);
+      position: absolute;
+      left: 0;
+      top: 100%;
+      background-color: #333;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      z-index: 1000;
+      white-space: normal;
+      max-width: 300px;
+      display: none;
+  }
+
+  .student-table td[data-full-text]:hover::after {
+      display: block;
+  }
+  /* Filter Group */
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #444;
+    margin-left: 20px;
+  }
+
+  .status-filter {
+    min-width: 120px;
+    padding: 8px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .status-filter:hover {
+    border-color: #1E90FF;
+  }
+
+  .status-filter:focus {
+    outline: none;
+    border-color: #1E90FF;
+    box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.1);
+  }
+
+  /* Optional: vertical alignment for label */
+  .status-label {
+    margin-top: 6px;
+    white-space: nowrap;
+  }
+
+  /* Search Container */
+  .search-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    max-width: 500px;
+  }
+
+  /* Select Dropdown */
+  .search-field-select {
+    min-width: 120px;
+  }
+
+  .search-field-dropdown {
+  width: 100%;
+  min-width: 140px;
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg fill='none' height='24' stroke='%23333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-field-dropdown:hover {
+  border-color: #1e90ff;
+}
+
+.search-field-dropdown:focus {
+  outline: none;
+  border-color: #1e90ff;
+  box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.15);
+}
+
+/* Search Bar */
+.search-bar {
+  position: relative;
+  flex: 1;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  margin-top: 18px;
+  margin-left: 450px;
+  color: #666;
+  font-size: 16px;
+}
+
+.search-input {
+  width: 500px;
+  padding: 10px 14px 10px 40px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.2s ease;
+  height: 50px;
+}
+
+.search-input:hover {
+  border-color: #1E90FF;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #1E90FF;
+  box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.1);
+}
+
+/* Search Row Container */
+.search-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}

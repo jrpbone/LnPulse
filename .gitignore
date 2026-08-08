@@ -1,0 +1,59 @@
+# Dependencies
+**/node_modules/
+**/.pnp/
+**/.pnp.js
+
+# Environment files and local secrets
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+
+# Build, test, and tool output
+**/build/
+**/dist/
+**/coverage/
+**/.cache/
+**/.parcel-cache/
+**/.eslintcache
+**/*.tsbuildinfo
+
+# Logs and process files
+**/*.log
+**/*.log.*
+**/*.pid
+**/*.pid.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local databases
+**/*.sqlite
+**/*.sqlite3
+**/*.db
+
+# Local certificates and keys
+**/*.key
+**/*.pem
+**/*.p12
+**/*.pfx
+
+# Editor and operating-system metadata
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+**/tmp/
+**/temp/
+**/*.tmp
+**/*.bak
+**/*~
