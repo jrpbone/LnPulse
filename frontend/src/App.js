@@ -6,6 +6,18 @@ import {
   Link,
   useLocation,
 } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  FiBookOpen,
+  FiChevronRight,
+  FiGrid,
+  FiLayers,
+  FiLogOut,
+  FiMenu,
+  FiUsers,
+  FiUserPlus,
+  FiX,
+} from "react-icons/fi";
 import Dashboard from "./pages/Dashboard";
 import CreateStudent from "./pages/CreateStudent";
 import StudentList from "./pages/StudentList";
@@ -40,6 +52,11 @@ function AppWrapper() {
 function App() {
   const { isAuthenticated, logout, privileges, user } = useAuth();
   const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -53,86 +70,94 @@ function App() {
     return location.pathname.toLowerCase().startsWith(path.toLowerCase());
   };
 
+  const displayName = user?.firstname || user?.username || "User";
+  const displayRole = user?.type === "admin" ? "Administrator" : "Faculty account";
+
+  const navLink = (to, label, Icon, activePath = to) => (
+    <Link to={to} className={isActive(activePath) ? "active" : ""}>
+      <Icon aria-hidden="true" />
+      <span>{label}</span>
+      <FiChevronRight className="nav-chevron" aria-hidden="true" />
+    </Link>
+  );
+
+  const showAppShell = !isLoginPage && isAuthenticated;
+
   return (
-    <div className="App">
-      {!isLoginPage && isAuthenticated && (
-        <div className="sidebar">
-          <h2>
-            {!privileges?.departmentId && !privileges?.sectionId
-              ? "Admin Panel"
-              : "STUDENT INFORMATION SYSTEM"}
-          </h2>
-
-          {/* Show user's first name */}
-          {user?.firstname && (
-            <div className="sidebar-user">
-              <strong>Welcome,</strong> {user.firstname}
+    <div className={`App ${showAppShell ? "app-shell" : "auth-shell"}`}>
+      {showAppShell && (
+        <>
+          <button
+            className="mobile-menu-button"
+            onClick={() => setIsSidebarOpen(true)}
+            aria-label="Open navigation"
+          >
+            <FiMenu />
+          </button>
+          <button
+            className={`sidebar-backdrop ${isSidebarOpen ? "visible" : ""}`}
+            onClick={() => setIsSidebarOpen(false)}
+            aria-label="Close navigation"
+          />
+          <aside className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
+            <div className="sidebar-brand">
+              <img src="/logo192.png" alt="Ligao National High School" />
+              <div>
+                <strong>LN Pulse</strong>
+                <span>Student Information System</span>
+              </div>
+              <button
+                className="sidebar-close"
+                onClick={() => setIsSidebarOpen(false)}
+                aria-label="Close navigation"
+              >
+                <FiX />
+              </button>
             </div>
-          )}
 
-          <br />
+            <div className="sidebar-user">
+              <span className="user-avatar">{displayName.charAt(0).toUpperCase()}</span>
+              <div>
+                <strong>{displayName}</strong>
+                <span>{displayRole}</span>
+              </div>
+            </div>
 
-          <Link to="/dashboard" className={isActive('/dashboard') ? 'active' : ''}>Dashboard</Link>
-          <br />
+            <nav className="sidebar-nav" aria-label="Primary navigation">
+              <p className="nav-label">Workspace</p>
+              {navLink("/dashboard", "Dashboard", FiGrid)}
 
-          {privileges?.canManageStudents && (
-            <>
-              {!privileges?.sectionId && (
-                <>
-                  <Link to="/CreateStudent" className={isActive('/CreateStudent') ? 'active' : ''}>Create New Record</Link>
-                  <br />
-                </>
-              )}
-              {privileges?.canViewAllStudents && (
-                <>
-                  <Link to="/StudentList" className={isActive('/StudentList') ? 'active' : ''}>View Student List</Link>
-                  <br />
-                </>
-              )}
-            </>
-          )}
+              {privileges?.canManageStudents && !privileges?.sectionId &&
+                navLink("/CreateStudent", "New student", FiUserPlus)}
+              {privileges?.canManageStudents && privileges?.canViewAllStudents &&
+                navLink("/StudentList", "Students", FiUsers)}
+              {privileges?.canViewDepartments &&
+                navLink(
+                  `/Departments${privileges?.departmentId ? `/${privileges.departmentId}` : ""}`,
+                  "Departments",
+                  FiLayers,
+                  "/Departments"
+                )}
+              {(privileges?.canViewSubjects ||
+                (!privileges?.departmentId && !privileges?.sectionId)) &&
+                navLink("/Subjects", "Curriculum", FiBookOpen)}
+              {privileges?.canManageUsers && navLink("/Users", "Users", FiUsers)}
+              {privileges?.sectionId &&
+                navLink(`/section/${privileges.sectionId}/students`, "My section", FiBookOpen, "/section/")}
+            </nav>
 
-          {/* Departments Link - Only for users who can view departments */}
-          {privileges?.canViewDepartments && (
-            <>
-              <Link to={`/Departments${privileges?.departmentId ? `/${privileges.departmentId}` : ''}`} className={isActive('/Departments') ? 'active' : ''}>Departments</Link>
-              <br />
-            </>
-          )}
-
-          {/* Subjects/Curriculum Link */}
-          {(privileges?.canViewSubjects ||
-            (!privileges?.departmentId && !privileges?.sectionId)) && (
-            <>
-              <Link to="/Subjects" className={isActive('/Subjects') ? 'active' : ''}>Curriculum</Link>
-              <br />
-            </>
-          )}
-
-          {privileges?.canManageUsers && (
-            <>
-              <Link to="/Users" className={isActive('/Users') ? 'active' : ''}>Users</Link>
-              <br />
-            </>
-          )}
-
-          {privileges?.canViewReports && (
-            <>
-              <br />
-            </>
-          )}
-
-          {privileges?.sectionId && (
-            <>
-              <Link to={`/section/${privileges.sectionId}/students`} className={isActive('/section/') ? 'active' : ''}>My Section</Link>
-              <br />
-            </>
-          )}
-          <button onClick={handleLogout}>Logout</button>
-        </div>
+            <div className="sidebar-footer">
+              <div className="system-status"><span /> System online</div>
+              <button onClick={handleLogout} className="logout-button">
+                <FiLogOut aria-hidden="true" />
+                <span>Sign out</span>
+              </button>
+            </div>
+          </aside>
+        </>
       )}
 
-      <div className="main-content">
+      <main className="main-content">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
@@ -307,7 +332,7 @@ function App() {
           {/* Root route - redirect to login */}
           <Route path="/" element={<Login />} />
         </Routes>
-      </div>
+      </main>
     </div>
   );
 }

@@ -1,24 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FiArrowRight, FiCheck, FiEye, FiEyeOff, FiLock, FiUser } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import "./styles.css";
+import "./Login.css";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
-  // const { login, hasPrivilege, hasAnyPrivilege, hasAllPrivileges } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
+    setError("");
 
     try {
       const response = await axios.post("http://localhost:3001/users/login", {
@@ -28,32 +30,28 @@ function Login() {
 
       if (response.data) {
         const userData = response.data;
-        
-        // Ensure section ID is present for advisers
-        if (userData.type === 'section_user' && !userData.sectionUser?.section?.section_id) {
-          setError("Adviser account not properly configured - missing section ID");
+
+        if (userData.type === "section_user" && !userData.sectionUser?.section?.section_id) {
+          setError("This adviser account is missing a section assignment.");
           setLoading(false);
           return;
         }
 
-        // Store user data and privileges
         login(userData);
         setShowModal(true);
         setTimeout(() => {
           setShowModal(false);
           navigate("/dashboard");
-        }, 1800);
+        }, 1200);
         setLoading(false);
         return;
       }
     } catch (err) {
-      // If database authentication fails, check hardcoded admin credentials
       if (username === "admin" && password === "admin") {
-        // Create admin user object with all privileges
         const adminUser = {
           id: 1,
-          username: 'admin',
-          type: 'admin',
+          username: "admin",
+          type: "admin",
           privileges: {
             canManageUsers: true,
             canManageDepartments: true,
@@ -69,118 +67,146 @@ function Login() {
             canViewAllSections: true,
             canManageAllSections: true,
             canViewSubjects: true,
-            canViewCurriculum: true
-          }
+            canViewCurriculum: true,
+          },
         };
 
-        // Store admin data and privileges
         login(adminUser);
         setShowModal(true);
         setTimeout(() => {
           setShowModal(false);
           navigate("/dashboard");
-        }, 1800);
+        }, 1200);
         setLoading(false);
         return;
       }
-      
-      setError(err.response?.data?.message || "Invalid username or password");
+
+      setError(err.response?.data?.message || "The username or password is incorrect.");
       setLoading(false);
     }
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSubmit(e);
-    }
-  };
-
   return (
-    <div className="login-container">
+    <div className="login-page">
       {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="welcome-animation">
-              <h2>Welcome{username === "admin" ? ", Administrator!" : "!"}</h2>
-              <div className="loading-spinner"></div>
-              <p>Redirecting to dashboard...</p>
-            </div>
+        <div className="login-success-overlay" role="status" aria-live="polite">
+          <div className="login-success-card">
+            <div className="success-check"><FiCheck /></div>
+            <h2>Welcome back{username === "admin" ? ", Administrator" : ""}</h2>
+            <p>Your workspace is ready. Taking you to the dashboard…</p>
+            <span className="redirect-loader" />
           </div>
         </div>
       )}
-      <div className="login-box">
-        <div className="login-header">
-          <img src="/favicon (2).ico" alt="School Logo" className="school-logo" />
-          <h2>Student Information System</h2>
+
+      <section className="login-visual" aria-label="Ligao National High School campus">
+        <div className="login-visual-top">
+          <img src="/logo192.png" alt="Ligao National High School seal" />
+          <div>
+            <strong>Ligao National High School</strong>
+            <span>Senior High School</span>
+          </div>
         </div>
+        <div className="login-visual-copy">
+          <span className="visual-kicker">LN Pulse</span>
+          <h1>Student information, thoughtfully organized.</h1>
+          <p>A secure workspace for managing records, enrollment, and academic progress.</p>
+        </div>
+        <div className="login-visual-footer">
+          <span className="status-dot" />
+          <span>Secure school management portal</span>
+        </div>
+      </section>
 
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
-            <label>Username</label>
-            <div className="input-user-icon">
-              <input
-                type="text"
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                  setError("");
-                }}
-                onKeyPress={handleKeyPress}
-                className="login-username-input"
-                disabled={loading || showModal}
-                required
-              />
-            </div>
-          </div>
-        
-          <div className="form-group">
-            <label>Password</label>
-            <div className="input-with-icon">
-              <input
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setError("");
-                }}
-                onKeyPress={handleKeyPress}
-                className="login-password-input"
-                disabled={loading || showModal}
-                required
-              />
-            </div>
+      <main className="login-panel">
+        <div className="login-card">
+          <div className="mobile-login-brand">
+            <img src="/logo192.png" alt="Ligao National High School seal" />
+            <span>LN Pulse</span>
           </div>
 
-          <div className="login-options">
-            <label className="remember-me">
+          <header className="login-heading">
+            <span className="login-eyebrow">Welcome back</span>
+            <h2>Sign in to your account</h2>
+            <p>Enter your LNHS credentials to continue.</p>
+          </header>
+
+          <form onSubmit={handleSubmit} className="modern-login-form">
+            <div className="login-field">
+              <label htmlFor="username">Username</label>
+              <div className="login-input-wrap">
+                <FiUser aria-hidden="true" />
+                <input
+                  id="username"
+                  type="text"
+                  placeholder="Enter your username"
+                  value={username}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                    setError("");
+                  }}
+                  autoComplete="username"
+                  disabled={loading || showModal}
+                  required
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            <div className="login-field">
+              <div className="login-label-row">
+                <label htmlFor="password">Password</label>
+                <a href="mailto:support@lnhs.edu?subject=Password%20reset">Forgot password?</a>
+              </div>
+              <div className="login-input-wrap">
+                <FiLock aria-hidden="true" />
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setError("");
+                  }}
+                  autoComplete="current-password"
+                  disabled={loading || showModal}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword((visible) => !visible)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
+              </div>
+            </div>
+
+            <label className="modern-remember">
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
                 disabled={loading || showModal}
               />
-              Remember me
+              <span>Keep me signed in on this device</span>
             </label>
-            <a href="https://www.youtube.com/watch?v=Ajrg-2USq9g" className="forgot-password">Forgot Password?</a>
-          </div>
 
-          {error && <div className="error-message">{error}</div>}
+            {error && <div className="login-error" role="alert">{error}</div>}
 
-          <button 
-            type="submit"
-            className="login-button"
-            disabled={loading || showModal}
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
+            <button type="submit" className="modern-login-button" disabled={loading || showModal}>
+              <span>{loading ? "Signing in…" : "Sign in"}</span>
+              {loading ? <span className="button-spinner" /> : <FiArrowRight aria-hidden="true" />}
+            </button>
+          </form>
 
-        <div className="login-footer">
-          <p>Need help? Contact <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0">support@lnhs.edu</a></p>
+          <footer className="login-help">
+            Need help accessing your account? <a href="mailto:support@lnhs.edu">Contact support</a>
+          </footer>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
