@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useParams } from 'react-router-dom';
@@ -28,7 +28,7 @@ function SectionStudents() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const targetSectionId = sectionId || privileges.sectionId;
@@ -39,8 +39,15 @@ function SectionStudents() {
         return;
       }
 
-      // Get students for the section
-      const studentsResponse = await axios.get(`http://localhost:3001/students/section/${targetSectionId}`);
+      // Fetch the section itself for authoritative name and grade metadata.
+      // Academic-info responses intentionally expose only limited nested section fields.
+      const [studentsResponse, sectionResponse] = await Promise.all([
+        axios.get(`http://localhost:3001/students/section/${targetSectionId}`),
+        axios.get(`http://localhost:3001/sections/${targetSectionId}`),
+      ]);
+
+      setSectionName(sectionResponse.data.section_name || 'Section');
+      setGradeLevel(sectionResponse.data.grade_level ?? sectionResponse.data.gradeLevel ?? '');
       
       // Get latest academic info for each student
       const studentsWithLatestInfo = await Promise.all(
@@ -62,33 +69,18 @@ function SectionStudents() {
       
       setStudents(studentsWithLatestInfo);
 
-      // Try to get section name and grade level from the first student's academic info if available
-      if (studentsWithLatestInfo.length > 0 && studentsWithLatestInfo[0].ACADEMIC_INFO_Ts?.[0]?.SECTION_T) {
-        const academicInfo = studentsWithLatestInfo[0].ACADEMIC_INFO_Ts[0].SECTION_T;
-        setSectionName(academicInfo.section_name);
-        setGradeLevel(academicInfo.grade_level);
-      } else {
-        // Fallback to fetching section directly
-        try {
-          const sectionResponse = await axios.get(`http://localhost:3001/sections/${targetSectionId}`);
-          setSectionName(sectionResponse.data.section_name);
-          setGradeLevel(sectionResponse.data.grade_level);
-        } catch (sectionErr) {
-          console.error('Error fetching section name:', sectionErr);
-        }
-      }
     } catch (err) {
       setError('Failed to fetch data');
       console.error('Error fetching data:', err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [sectionId, privileges.sectionId]);
 
   // Initial data fetch
   useEffect(() => {
     fetchData();
-  }, [sectionId, privileges.sectionId]);
+  }, [fetchData]);
 
   useEffect(() => {
     const fetchAcademicSettings = async () => {

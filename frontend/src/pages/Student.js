@@ -6,6 +6,9 @@ import * as Yup from "yup";
 import { useAuth } from '../context/AuthContext';
 import { useConfirmation } from '../context/ConfirmationContext';
 import "./student.css";
+import "./StudentExperience.css";
+import WorkspacePageHeader from "../components/WorkspacePageHeader";
+import { FiBookOpen, FiCalendar, FiCheckCircle, FiEdit3, FiEye, FiLayers, FiMapPin, FiPlus, FiPrinter, FiRefreshCw, FiSave, FiSlash, FiTrash2, FiUser, FiUsers, FiX } from "react-icons/fi";
 
 
 
@@ -26,8 +29,6 @@ function Student() {
   const [departments, setDepartments] = useState([]);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const [hasAccess] = useState(true);
-  const [academicPerformance, setAcademicPerformance] = useState(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [academicSettings, setAcademicSettings] = useState(null);
@@ -169,14 +170,6 @@ function Student() {
 
 
   const handleCloseAcadModal = () => setShowAcadModal(false);
-
-
-
-
-  const handleCloseSuccessModal = () => {
-    setShowSuccessModal(false);
-    setSuccessMessage("");
-  };
 
 
 
@@ -492,7 +485,7 @@ function Student() {
 
 
   return (
-    <div className="details_main">
+    <div className="container workspace-page student-details-page details_main">
       {/* Success Modal */}
       {showSuccessModal && (
         <div className="modal-overlay">
@@ -544,76 +537,69 @@ function Student() {
 
       {/* Status Update Modal */}
       {showStatusModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3>Update Student Status</h3>
-            </div>
-            <div className="modal-body">
-              <p><strong>Student ID:</strong> {postObject.student_id}</p>
-              <p><strong>Name:</strong> {`${postObject.last_name}, ${postObject.first_name} ${postObject.middle_name || ''}`}</p>
-              <div style={{ marginTop: '20px' }}>
-                <label style={{ display: 'block', marginBottom: '10px' }}>Status:</label>
-                <select
-                  value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    borderRadius: '4px',
-                    border: '1px solid #ddd'
-                  }}
-                >
-                  <option value="">Select Status</option>
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
+        <div className="modal-overlay student-status-overlay" role="dialog" aria-modal="true" aria-labelledby="student-status-title">
+          <div className="modal-content student-status-modal">
+            <header className="student-status-header">
+              <div className="student-status-header-icon"><FiRefreshCw /></div>
+              <div><p>Enrollment record</p><h3 id="student-status-title">Update student status</h3><span>Choose whether this learner should appear as active or inactive.</span></div>
+              <button type="button" className="student-status-close" onClick={() => setShowStatusModal(false)} aria-label="Close status dialog"><FiX /></button>
+            </header>
+            <div className="student-status-body">
+              <div className="student-status-identity">
+                <span className="student-status-avatar">{`${postObject.first_name?.charAt(0) || ''}${postObject.last_name?.charAt(0) || ''}`.toUpperCase()}</span>
+                <div><strong>{`${postObject.first_name || ''} ${postObject.middle_name || ''} ${postObject.last_name || ''}`.replace(/\s+/g, ' ').trim()}</strong><span>LRN {postObject.student_id}</span></div>
+                <span className={`status-badge status-${postObject.status || 'active'}`}>Currently {postObject.status || 'active'}</span>
               </div>
+              <fieldset className="student-status-options">
+                <legend>New status</legend>
+                <label className={`student-status-option active ${selectedStatus === 'active' ? 'selected' : ''}`}>
+                  <input type="radio" name="student-status" value="active" checked={selectedStatus === 'active'} onChange={(event) => setSelectedStatus(event.target.value)} />
+                  <span className="student-status-option-icon"><FiCheckCircle /></span>
+                  <span className="student-status-option-copy"><strong>Active</strong><small>The learner remains visible in active student records.</small></span>
+                  <span className="student-status-radio" aria-hidden="true" />
+                </label>
+                <label className={`student-status-option inactive ${selectedStatus === 'inactive' ? 'selected' : ''}`}>
+                  <input type="radio" name="student-status" value="inactive" checked={selectedStatus === 'inactive'} onChange={(event) => setSelectedStatus(event.target.value)} />
+                  <span className="student-status-option-icon"><FiSlash /></span>
+                  <span className="student-status-option-copy"><strong>Inactive</strong><small>The learner is retained but removed from active listings.</small></span>
+                  <span className="student-status-radio" aria-hidden="true" />
+                </label>
+              </fieldset>
+              <div className="student-status-note"><FiRefreshCw /><span>This changes record visibility only; academic history will not be deleted.</span></div>
             </div>
-            <div className="modal-footer" style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-              <button
-                onClick={() => setShowStatusModal(false)}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '4px',
-                  border: '1px solid #ddd',
-                  background: '#fff',
-                  cursor: 'pointer'
-                }}
-              >
+            <footer className="student-status-actions">
+              <button type="button" className="student-status-cancel" onClick={() => setShowStatusModal(false)}>
                 Cancel
               </button>
-              <button
+              <button type="button" className="student-status-save"
                 onClick={handleStatusUpdate}
                 disabled={!selectedStatus}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '4px',
-                  border: 'none',
-                  background: '#1E90FF',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  opacity: !selectedStatus ? 0.7 : 1
-                }}
               >
-                Save
+                <FiSave /> Save status
               </button>
-            </div>
+            </footer>
           </div>
         </div>
       )}
 
 
+      <WorkspacePageHeader
+        eyebrow="Student records"
+        title="Student profile"
+        description="Review personal information, family contacts, addresses, and academic history."
+      />
 
-
-      <div>
+      <div className="student-record-content">
         <div className="details-section">
-          <h2>
-            Student Details
-            <div className="button-group">
+          <div className="student-profile-hero">
+            <div className="student-profile-identity">
+              <span className="student-profile-avatar">{`${postObject.first_name?.charAt(0) || ''}${postObject.last_name?.charAt(0) || ''}`.toUpperCase()}</span>
+              <div><span className="student-profile-kicker">Learner profile</span><h2>{`${postObject.first_name || ''} ${postObject.middle_name || ''} ${postObject.last_name || ''} ${postObject.suffix || ''}`.replace(/\s+/g, ' ').trim()}</h2><div className="student-profile-meta"><span>LRN {postObject.student_id}</span><span className={`status-badge status-${postObject.status || 'active'}`}>{postObject.status || 'active'}</span></div></div>
+            </div>
+            <div className="student-profile-actions">
               {/* Only show Add Academics button if user has full edit permissions */}
               {privileges?.canEditStudents && (
-                <button onClick={handleAddAcademicInfo}>+ Add Academics</button>
+                <button onClick={handleAddAcademicInfo} className="student-action primary"><FiPlus /> Add academics</button>
               )}
               {privileges?.canEditStudents && (
                 <button
@@ -622,9 +608,9 @@ function Student() {
                       state: { studentData: postObject },
                     })
                   }
-                  className="edit-button"
+                  className="student-action"
                 >
-                  Edit Student Details
+                  <FiEdit3 /> Edit details
                 </button>
               )}
               {privileges?.canEditStudents && (
@@ -633,36 +619,20 @@ function Student() {
                     setSelectedStatus(postObject.status || 'active');
                     setShowStatusModal(true);
                   }}
-                  className="status-button"
+                  className="student-action"
                 >
-                  Update Status
+                  <FiRefreshCw /> Update status
                 </button>
               )}
-              <button onClick={handlePrint} className="print-button">
-                Print Student Details
+              <button onClick={handlePrint} className="student-action">
+                <FiPrinter /> Print
               </button>
             </div>
-          </h2>
-          <p>
-            <strong>LRN:</strong> {postObject.student_id}
-          </p>
-          <p>
-            <strong>Full Name:</strong>{" "}
-            {`${postObject.last_name}, ${postObject.first_name} ${
-              postObject.middle_name || ""
-            }${postObject.suffix ? ", " + postObject.suffix : ""}`}
-          </p>
-          <p>
-            <strong>Status:</strong>{" "}
-            <span className={`status-badge status-${postObject.status || 'active'}`}>
-              {postObject.status || 'active'}
-            </span>
-          </p>
-          <br></br>
+          </div>
 
 
           <div className="section">
-            <div className="section-title">Personal Information</div>
+            <div className="section-title"><FiUser /> Personal Information</div>
             <div className="details-info-grid">
               <p>
                 <strong>Date of Birth:</strong> {postObject.birth_date}
@@ -702,7 +672,7 @@ function Student() {
 
 
           <div className="section">
-            <div className="section-title">Address Information</div>
+            <div className="section-title"><FiMapPin /> Address Information</div>
             <div className="details-info-grid">
               <p>
                 <strong>Current Address:</strong>{" "}
@@ -735,7 +705,7 @@ function Student() {
 
 
           <div className="section">
-            <div className="section-title">Guardian Information</div>
+            <div className="section-title"><FiUsers /> Guardian Information</div>
             <div className="details-info-grid">
               <p>
                 <strong>Guardian: </strong>
@@ -754,14 +724,21 @@ function Student() {
 
 
 
-        <h3>Academic Information</h3>
+        <div className="student-academic-heading"><div><span className="student-academic-icon"><FiBookOpen /></span><div><h3>Academic Information</h3><p>Enrollment history, progression status, and grade records</p></div></div><span className="collection-count">{academicInfo.length}</span></div>
         {showAcadModal && (
-          <div className="modal-overlay">
-            <div className="modal-content" style={{ width: '600px', maxWidth: '95%' }}>
-              <div className="modal-header">
-                <h3>{editingInfo ? "Edit Academic Info" : "Add Academic Info"}</h3>
-              </div>
-              <div className="modal-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+          <div className="modal-overlay academic-info-overlay" role="dialog" aria-modal="true" aria-labelledby="academic-info-modal-title">
+            <div className="modal-content academic-info-modal">
+              <header className="academic-info-modal-header">
+                <div className="academic-info-header-icon"><FiBookOpen /></div>
+                <div><p>Enrollment record</p><h3 id="academic-info-modal-title">{editingInfo ? "Edit academic information" : "Add academic information"}</h3><span>{editingInfo ? 'Update this enrollment period and progression status.' : 'Create a new enrollment period for this learner.'}</span></div>
+                <button type="button" className="academic-info-close" onClick={() => { handleCloseAcadModal(); setEditingInfo(null); }} aria-label="Close academic information dialog"><FiX /></button>
+              </header>
+              <div className="academic-info-modal-body">
+                <div className="academic-info-student-summary">
+                  <span className="academic-info-avatar">{`${postObject.first_name?.charAt(0) || ''}${postObject.last_name?.charAt(0) || ''}`.toUpperCase()}</span>
+                  <div><strong>{`${postObject.first_name || ''} ${postObject.last_name || ''}`.trim()}</strong><span>LRN {postObject.student_id}</span></div>
+                  {editingInfo && <span className="academic-record-id">Record #{editingInfo.acads_id}</span>}
+                </div>
                 <Formik
                   enableReinitialize
                   initialValues={{
@@ -875,18 +852,21 @@ function Student() {
 
 
                     return (
-                      <Form>
+                      <Form className="academic-info-form">
+                        <div className="academic-form-section-heading"><span><FiLayers /></span><div><h4>Academic placement</h4><p>Grade, department, strand, and section assignment</p></div></div>
+                        <div className="academic-form-grid">
                         <div className="form-group">
-                          <label className="label">Grade Level:</label>
+                          <label className="label" htmlFor="academic-grade-level">Grade level</label>
                           <Field 
+                            id="academic-grade-level"
                             as="select" 
                             name="gradeLevel" 
                             className="form-control"
                             disabled={!privileges?.canEditStudents}
                           >
                             <option value="">Select</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
+                            <option value="11">Grade 11</option>
+                            <option value="12">Grade 12</option>
                           </Field>
                           <ErrorMessage name="gradeLevel" component="div" className="error-message" />
                         </div>
@@ -895,8 +875,9 @@ function Student() {
 
 
                         <div className="form-group">
-                          <label className="label">Department:</label>
+                          <label className="label" htmlFor="academic-department">Department</label>
                           <Field 
+                            id="academic-department"
                             as="select" 
                             name="department_id" 
                             className="form-control"
@@ -919,8 +900,9 @@ function Student() {
 
 
                         <div className="form-group">
-                          <label className="label">Strand:</label>
+                          <label className="label" htmlFor="academic-strand">Strand</label>
                           <Field 
+                            id="academic-strand"
                             as="select" 
                             name="strand_id" 
                             className="form-control"
@@ -943,8 +925,9 @@ function Student() {
 
 
                         <div className="form-group">
-                          <label className="label">Section:</label>
+                          <label className="label" htmlFor="academic-section">Section</label>
                           <Field 
+                            id="academic-section"
                             as="select" 
                             name="section_id" 
                             className="form-control"
@@ -967,12 +950,17 @@ function Student() {
                           <ErrorMessage name="section_id" component="div" className="error-message" />
                         </div>
 
+                        </div>
+                        <div className="academic-form-section-heading secondary"><span><FiCalendar /></span><div><h4>Enrollment period and status</h4><p>School term, entry classification, and learner outcome</p></div></div>
+                        <div className="academic-form-grid period">
+
 
 
 
                         <div className="form-group">
-                          <label className="label">School Year:</label>
+                          <label className="label" htmlFor="academic-school-year">School year</label>
                           <Field
+                            id="academic-school-year"
                             type="text"
                             name="schoolYear"
                             className="form-control"
@@ -985,8 +973,9 @@ function Student() {
 
 
                         <div className="form-group">
-                          <label className="label">Semester:</label>
+                          <label className="label" htmlFor="academic-semester">Semester</label>
                           <Field 
+                            id="academic-semester"
                             type="text"
                             name="semester" 
                             className="form-control"
@@ -999,8 +988,9 @@ function Student() {
 
 
                         <div className="form-group">
-                          <label className="label">Entry Status:</label>
+                          <label className="label" htmlFor="academic-entry-status">Entry status</label>
                           <Field 
+                            id="academic-entry-status"
                             as="select" 
                             name="entryStatus" 
                             className="form-control"
@@ -1019,8 +1009,9 @@ function Student() {
 
                         {editingInfo && (
                           <div className="form-group">
-                            <label className="label">Exit Status:</label>
+                            <label className="label" htmlFor="academic-exit-status">Exit status</label>
                             <Field 
+                              id="academic-exit-status"
                               as="select" 
                               name="exitStatus" 
                               className="form-control"
@@ -1054,22 +1045,24 @@ function Student() {
                           </div>
                         )}
 
+                        </div>
 
 
 
-                        <div className="modal-footer">
-                          <button type="submit" className="modal-button">Save</button>
+
+                        <div className="academic-info-note"><FiBookOpen /><span>{privileges?.canEditStudents ? 'Academic placement changes affect this record only and preserve earlier history.' : 'Your access allows updating the learner’s exit status only.'}</span></div>
+                        <div className="academic-info-actions">
                           <button
                             type="button"
-                            className="modal-button"
+                            className="academic-info-cancel"
                             onClick={() => {
                               handleCloseAcadModal();
                               setEditingInfo(null);
                             }}
-                            style={{ marginLeft: '10px', background: '#6c757d' }}
                           >
                             Cancel
                           </button>
+                          <button type="submit" className="academic-info-save"><FiSave /> {editingInfo ? 'Save changes' : 'Add record'}</button>
                         </div>
                       </Form>
                     );
@@ -1079,7 +1072,7 @@ function Student() {
             </div>
           </div>
         )}
-        <table border="1" cellPadding="10" style={{ marginTop: "20px" }}>
+        <div className="student-academic-table-wrap"><table className="student-academic-table">
           <thead>
             <tr>
               <th>Date Created</th>
@@ -1097,7 +1090,7 @@ function Student() {
             </tr>
           </thead>
           <tbody>
-            {academicInfo.map((info, idx) => (
+            {academicInfo.length === 0 ? <tr><td colSpan="12"><div className="collection-empty"><FiBookOpen /><strong>No academic records yet</strong><span>Add an academic record to begin tracking enrollment history.</span></div></td></tr> : academicInfo.map((info, idx) => (
               <tr key={idx}>
                 <td>
                   {new Date(info.createdAt).toLocaleString(undefined, {
@@ -1133,23 +1126,25 @@ function Student() {
                     : "Pending Grades"}
                 </td>
                 <td>
-                  <div className="dropdown">
-                    <button className="dropdown-button">Actions ▼</button>
-                    <div className="dropdown-content">
+                  <div className="instance-actions">
                       {privileges?.canManageStudents && (
                         <button 
                           onClick={() => handleEdit(info)} 
-                          className="dropdown-item"
+                          className="instance-action edit"
+                          title={privileges?.canEditStudents ? 'Edit academic record' : 'Update exit status'}
+                          aria-label={privileges?.canEditStudents ? 'Edit academic record' : 'Update exit status'}
                         >
-                          {privileges?.canEditStudents ? 'Edit' : 'Update Exit Status'}
+                          <FiEdit3 />
                         </button>
                       )}
                       {privileges?.canEditStudents && (
                         <button 
                           onClick={() => handleDelete(info.acads_id)} 
-                          className="dropdown-item delete"
+                          className="instance-action delete"
+                          title="Delete academic record"
+                          aria-label="Delete academic record"
                         >
-                          Delete
+                          <FiTrash2 />
                         </button>
                       )}
                       <button
@@ -1158,17 +1153,18 @@ function Student() {
                             state: { exitStatus: info.exitStatus }
                           })
                         }
-                        className="dropdown-item"
+                        className="instance-action view"
+                        title="View grades"
+                        aria-label="View grades"
                       >
-                        View Grades
+                        <FiEye />
                       </button>
-                    </div>
                   </div>
                 </td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
       </div>
 
 

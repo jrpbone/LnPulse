@@ -263,9 +263,13 @@ function Departments() {
 
       {/* Edit Department Modal */}
       {showEditModal && selectedDepartment && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Edit Department</h3>
+        <div className="modal-overlay entity-edit-overlay" role="dialog" aria-modal="true" aria-labelledby="edit-department-title">
+          <div className="modal-content entity-edit-modal">
+            <header className="entity-edit-header">
+              <div className="entity-edit-icon"><FiEdit3 /></div>
+              <div><p>Department details</p><h3 id="edit-department-title">Edit department</h3><span>Update the department name and the description shown throughout the workspace.</span></div>
+              <button type="button" className="entity-edit-close" onClick={handleCloseEditModal} aria-label="Close edit department dialog"><FiX /></button>
+            </header>
             <Formik
               initialValues={{
                 department_name: selectedDepartment.department_name,
@@ -274,10 +278,10 @@ function Departments() {
               validationSchema={validationSchema}
               onSubmit={handleEditSubmit}
             >
-              <Form>
+              <Form className="entity-edit-form">
                 <div className="form-group">
-                  <label>Department Name:</label>
-                  <Field name="department_name" type="text" className="form-input" />
+                  <label htmlFor="edit-department-name">Department name <span>*</span></label>
+                  <Field id="edit-department-name" name="department_name" type="text" className="form-input" autoFocus />
                   <ErrorMessage
                     name="department_name"
                     component="div"
@@ -286,8 +290,8 @@ function Departments() {
                 </div>
 
                 <div className="form-group">
-                  <label>Department Description:</label>
-                  <Field name="department_description" type="text" className="form-input" />
+                  <label htmlFor="edit-department-description">Description <span>*</span></label>
+                  <Field id="edit-department-description" name="department_description" as="textarea" className="form-input entity-description-input" />
                   <ErrorMessage
                     name="department_description"
                     component="div"
@@ -295,8 +299,8 @@ function Departments() {
                   />
                 </div>
 
-                <div className="button-group">
-                  <button type="submit" className="save-button">Update</button>
+                <div className="entity-edit-note"><FiLayers /><span>Changes will be reflected on its strands and department listings.</span></div>
+                <div className="button-group entity-edit-actions">
                   <button
                     type="button"
                     className="cancel-button"
@@ -304,6 +308,7 @@ function Departments() {
                   >
                     Cancel
                   </button>
+                  <button type="submit" className="save-button"><FiEdit3 /> Save changes</button>
                 </div>
               </Form>
             </Formik>

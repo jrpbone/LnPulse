@@ -5,6 +5,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../context/AuthContext";
 import ConfirmationModal from "../components/ConfirmationModal";
+import WorkspacePageHeader from "../components/WorkspacePageHeader";
+import { FiBookOpen, FiCheck, FiEdit3, FiEye, FiGrid, FiLayers, FiPlus, FiTrash2, FiUsers, FiX } from "react-icons/fi";
 
 function StrandSections() {
   const { department_id } = useParams();
@@ -13,6 +15,7 @@ function StrandSections() {
   const [, setStrandId] = useState(null);
   const [strands, setStrands] = useState([]);
   const [sections, setSections] = useState([]);
+  const [strandSectionCounts, setStrandSectionCounts] = useState({});
   const [selectedStrand, setSelectedStrand] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -54,6 +57,15 @@ function StrandSections() {
 
     axios.get(url).then((res) => {
       setSections(res.data);
+      if (strandId) {
+        setStrandSectionCounts((current) => ({ ...current, [strandId]: res.data.length }));
+      } else {
+        setStrandSectionCounts(res.data.reduce((counts, section) => {
+          const strandIdKey = section.strand_id || section.STRAND_T?.strand_id;
+          if (strandIdKey) counts[strandIdKey] = (counts[strandIdKey] || 0) + 1;
+          return counts;
+        }, {}));
+      }
     });
   }, [department_id]);
 
@@ -71,6 +83,8 @@ function StrandSections() {
     section_name: Yup.string().required("Section name is required"),
     grade_level: Yup.string().required("Grade level is required"),
   });
+
+  const getStrandSectionCount = (strandId) => strandSectionCounts[strandId] || 0;
 
   const handleAddClick = (type) => {
     if (type === 'strand') {
@@ -257,94 +271,86 @@ function StrandSections() {
   };
 
   return (
-    <div className="create_main">
+    <div className="container workspace-page strand-sections-page">
       {showSuccessMessage && (
         <div className="success-message">
           {successMessage}
         </div>
       )}
-      <div className="createStudentPage">
-        <h2>{departmentName} Strands</h2>
-        {!privileges?.departmentId && (
-          <div className="button-container">
-            <button className="add-button" onClick={() => handleAddClick('strand')}>+ Add Strand</button>
-            <button 
-              className="show-all-button"
-              onClick={() => {
-                setSelectedStrand(null);
-                fetchSections();
-              }}
-            >
-              Show All Sections
-            </button>
-          </div>
-        )}
+      <WorkspacePageHeader
+        eyebrow="Academic structure"
+        title={`${departmentName} Strands`}
+        count={strands.length}
+        description="Select a strand to review its sections, student capacity, and academic assignments."
+        actions={!privileges?.departmentId ? (
+          <button type="button" className="workspace-primary-action" onClick={() => handleAddClick('strand')}><FiPlus /><span>New strand</span></button>
+        ) : null}
+      />
+
+      <section className="strand-collection-panel">
+        <div className="strand-collection-heading">
+          <div><span>Department strands</span><p>Choose a strand to filter the sections below.</p></div>
+          {selectedStrand && (
+            <button type="button" className="strand-secondary-action" onClick={() => { setSelectedStrand(null); fetchSections(); }}><FiGrid /> Show all sections</button>
+          )}
+        </div>
 
         {strands.length === 0 ? (
-          <p>No strands found for this department.</p>
+          <div className="collection-empty strand-route-empty"><FiBookOpen /><strong>No strands in this department</strong><span>Create the first strand to start organizing sections.</span></div>
         ) : (
-          <ul className="strand-list">
-            {strands.map((strand) => (
-              <li
-                key={strand.strand_id}
-                className={`strand-item ${selectedStrand === strand.strand_id ? 'selected' : ''}`}
-              >
-                <div className="strand-content" onClick={() => {
-                  setSelectedStrand(strand.strand_id);
-                  fetchSections(strand.strand_id);
-                }}>
-                  <strong>{strand.strand_name}</strong> — {strand.strand_description}
-                </div>
-                {!privileges?.departmentId && (
-                  <div className="strand-actions">
-                    <button 
-                      className="edit-button" 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEditStrand(strand);
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button 
-                      className="delete-button" 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteStrand(strand);
-                      }}
-                    >
-                      Delete
-                    </button>
+          <div className="strand-instance-grid">
+            {strands.map((strand) => {
+              const isSelected = selectedStrand === strand.strand_id;
+              const sectionCount = getStrandSectionCount(strand.strand_id);
+              return (
+                <article
+                  key={strand.strand_id}
+                  className={`department-strand-instance ${isSelected ? 'selected' : ''}`}
+                  onClick={() => { setSelectedStrand(strand.strand_id); fetchSections(strand.strand_id); }}
+                  onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedStrand(strand.strand_id); fetchSections(strand.strand_id); } }}
+                  role="button"
+                  tabIndex="0"
+                  aria-pressed={isSelected}
+                >
+                  <div className="department-strand-topline">
+                    <span className="department-strand-icon"><FiBookOpen /></span>
+                    {isSelected && <span className="selected-strand-badge"><FiCheck /> Selected</span>}
+                    {!privileges?.departmentId && (
+                      <div className="department-strand-actions">
+                        <button type="button" className="instance-action edit" onClick={(event) => { event.stopPropagation(); handleEditStrand(strand); }} title="Edit strand" aria-label={`Edit ${strand.strand_name}`}><FiEdit3 /></button>
+                        <button type="button" className="instance-action delete" onClick={(event) => { event.stopPropagation(); handleDeleteStrand(strand); }} title="Delete strand" aria-label={`Delete ${strand.strand_name}`}><FiTrash2 /></button>
+                      </div>
+                    )}
                   </div>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <h2>
-          {selectedStrand 
-            ? `${strands.find(s => s.strand_id === selectedStrand)?.strand_name || ''} Sections`
-            : 'All Sections'
-          }
-        </h2>
-
-        {selectedStrand && !privileges?.departmentId && (
-          <div className="button-container">
-            <button 
-              className="add-button" 
-              onClick={() => handleAddClick('section')}
-            >
-              + Add Section
-            </button>
+                  <div className="department-strand-copy">
+                    <h3>{strand.strand_name}</h3>
+                    <p>{strand.strand_description || 'No description provided for this strand.'}</p>
+                  </div>
+                  <footer className="department-strand-footer">
+                    <span><FiLayers /><strong>{sectionCount}</strong> {sectionCount === 1 ? 'section' : 'sections'}</span>
+                    <span className="strand-open-label">View sections <FiEye /></span>
+                  </footer>
+                </article>
+              );
+            })}
           </div>
         )}
+      </section>
+
+      <section className="strand-sections-panel">
+        <div className="collection-section-heading">
+          <div className="collection-section-title"><span className="collection-section-icon adviser"><FiGrid /></span><div><h2>{selectedStrand ? `${strands.find(s => s.strand_id === selectedStrand)?.strand_name || ''} Sections` : 'All Sections'}</h2><p>{selectedStrand ? 'Showing sections assigned to the selected strand' : 'Showing every section in this department'}</p></div></div>
+          <div className="strand-section-heading-actions">
+            <span className="collection-count">{sections.length}</span>
+            {selectedStrand && !privileges?.departmentId && <button type="button" className="strand-add-section" onClick={() => handleAddClick('section')}><FiPlus /> Add section</button>}
+          </div>
+        </div>
 
         {sections.length === 0 ? (
-          <p>No sections available.</p>
+          <div className="collection-empty"><FiGrid /><strong>No sections available</strong><span>{selectedStrand ? 'Add a section to this strand to get started.' : 'Sections created for this department will appear here.'}</span></div>
         ) : (
-          <div className="table-container">
-            <table className="data-table">
+          <div className="strand-section-table-wrap">
+            <table className="data-table strand-section-table">
               <thead>
                 <tr>
                   <th>Strand</th>
@@ -357,33 +363,15 @@ function StrandSections() {
               <tbody>
                 {sections.map((section) => (
                   <tr key={section.section_id}>
-                    <td>{section.STRAND_T?.strand_name || section.strand_name || "N/A"}</td>
-                    <td>{section.grade_level}</td>
-                    <td>{section.section_name}</td>
-                    <td>{section.number_students ?? 0}</td>
+                    <td><span className="section-strand-name"><FiBookOpen />{section.STRAND_T?.strand_name || section.strand_name || "N/A"}</span></td>
+                    <td><span className="grade-level-chip">Grade {section.grade_level}</span></td>
+                    <td><div className="section-identity"><span className="section-avatar">{section.section_name?.charAt(0)?.toUpperCase() || 'S'}</span><span><strong>{section.section_name}</strong><small>Section #{section.section_id}</small></span></div></td>
+                    <td><span className="section-student-count"><FiUsers /><strong>{section.number_students ?? 0}</strong> students</span></td>
                     <td>
-                      <div className="dropdown">
-                        <button className="dropdown-button">Actions ▼</button>
-                      </div>
-                      <div className="dropdown-content">
-                        <button 
-                          className="dropdown-item"
-                          onClick={() => handleEdit(section)}
-                        >
-                          Edit
-                        </button>
-                        <button 
-                          className="dropdown-item"
-                          onClick={() => handleDelete(section)}
-                        >
-                          Delete
-                        </button>
-                        <button 
-                          className="dropdown-item"
-                          onClick={() => navigate(`/section/${section.section_id}/students`)}
-                        >
-                          View
-                        </button>
+                      <div className="instance-actions">
+                        <button type="button" className="instance-action view" onClick={() => navigate(`/section/${section.section_id}/students`)} title="View students" aria-label={`View students in ${section.section_name}`}><FiEye /></button>
+                        <button type="button" className="instance-action edit" onClick={() => handleEdit(section)} title="Edit section" aria-label={`Edit ${section.section_name}`}><FiEdit3 /></button>
+                        <button type="button" className="instance-action delete" onClick={() => handleDelete(section)} title="Delete section" aria-label={`Delete ${section.section_name}`}><FiTrash2 /></button>
                       </div>
                     </td>
                   </tr>
@@ -392,13 +380,18 @@ function StrandSections() {
             </table>
           </div>
         )}
+      </section>
 
         {renderModal()}
 
         {showStrandEditModal && strandToEdit && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Edit Strand</h3>
+          <div className="modal-overlay entity-edit-overlay" role="dialog" aria-modal="true" aria-labelledby="edit-strand-title">
+            <div className="modal-content entity-edit-modal">
+              <header className="entity-edit-header">
+                <div className="entity-edit-icon strand"><FiBookOpen /></div>
+                <div><p>Curriculum structure</p><h3 id="edit-strand-title">Edit strand</h3><span>Refine the strand name and description shown in this department.</span></div>
+                <button type="button" className="entity-edit-close" onClick={() => { setShowStrandEditModal(false); setStrandToEdit(null); }} aria-label="Close edit strand dialog"><FiX /></button>
+              </header>
               <Formik
                 initialValues={{
                   strand_name: strandToEdit.strand_name || "",
@@ -427,21 +420,21 @@ function StrandSections() {
                     });
                 }}
               >
-                <Form>
+                <Form className="entity-edit-form">
                   <div className="form-group">
-                    <label>Strand Name:</label>
-                    <Field name="strand_name" type="text" className="form-input" />
+                    <label htmlFor="edit-strand-name">Strand name <span>*</span></label>
+                    <Field id="edit-strand-name" name="strand_name" type="text" className="form-input" autoFocus />
                     <ErrorMessage name="strand_name" component="div" className="error-message" />
                   </div>
 
                   <div className="form-group">
-                    <label>Strand Description:</label>
-                    <Field name="strand_description" type="text" className="form-input" />
+                    <label htmlFor="edit-strand-description">Description <span>*</span></label>
+                    <Field id="edit-strand-description" name="strand_description" as="textarea" className="form-input entity-description-input" />
                     <ErrorMessage name="strand_description" component="div" className="error-message" />
                   </div>
 
-                  <div className="button-group">
-                    <button type="submit" className="save-button">Update</button>
+                  <div className="entity-edit-note"><FiLayers /><span>Section assignments remain unchanged when strand details are updated.</span></div>
+                  <div className="button-group entity-edit-actions">
                     <button
                       type="button"
                       className="cancel-button"
@@ -452,6 +445,7 @@ function StrandSections() {
                     >
                       Cancel
                     </button>
+                    <button type="submit" className="save-button"><FiEdit3 /> Save changes</button>
                   </div>
                 </Form>
               </Formik>
@@ -460,9 +454,13 @@ function StrandSections() {
         )}
 
         {showEditModal && sectionToEdit && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Edit Section</h3>
+          <div className="modal-overlay entity-edit-overlay" role="dialog" aria-modal="true" aria-labelledby="edit-section-title">
+            <div className="modal-content entity-edit-modal">
+              <header className="entity-edit-header">
+                <div className="entity-edit-icon section"><FiGrid /></div>
+                <div><p>Class organization</p><h3 id="edit-section-title">Edit section</h3><span>Update the section label and grade-level assignment.</span></div>
+                <button type="button" className="entity-edit-close" onClick={() => { setShowEditModal(false); setSectionToEdit(null); }} aria-label="Close edit section dialog"><FiX /></button>
+              </header>
               <Formik
                 initialValues={{
                   section_name: sectionToEdit.section_name || "",
@@ -490,25 +488,27 @@ function StrandSections() {
                     });
                 }}
               >
-                <Form>
+                <Form className="entity-edit-form">
+                  <div className="entity-edit-grid">
                   <div className="form-group">
-                    <label>Grade Level:</label>
-                    <Field name="grade_level" as="select" className="form-input">
+                    <label htmlFor="edit-section-grade">Grade level <span>*</span></label>
+                    <Field id="edit-section-grade" name="grade_level" as="select" className="form-input">
                       <option value="" disabled hidden>-- Select Grade Level --</option>
-                      <option value="11">11</option>
-                      <option value="12">12</option>
+                      <option value="11">Grade 11</option>
+                      <option value="12">Grade 12</option>
                     </Field>
                     <ErrorMessage name="grade_level" component="div" className="error-message" />
                   </div>
 
                   <div className="form-group">
-                    <label>Section Name:</label>
-                    <Field name="section_name" type="text" className="form-input" />
+                    <label htmlFor="edit-section-name">Section name <span>*</span></label>
+                    <Field id="edit-section-name" name="section_name" type="text" className="form-input" autoFocus />
                     <ErrorMessage name="section_name" component="div" className="error-message" />
                   </div>
+                  </div>
 
-                  <div className="button-group">
-                    <button type="submit" className="save-button">Update</button>
+                  <div className="entity-edit-note"><FiUsers /><span>Students and existing academic records remain assigned to this section.</span></div>
+                  <div className="button-group entity-edit-actions">
                     <button
                       type="button"
                       className="cancel-button"
@@ -519,6 +519,7 @@ function StrandSections() {
                     >
                       Cancel
                     </button>
+                    <button type="submit" className="save-button"><FiEdit3 /> Save changes</button>
                   </div>
                 </Form>
               </Formik>
@@ -595,7 +596,6 @@ function StrandSections() {
             </div>
           </div>
         )}
-      </div>
     </div>
   );
 }

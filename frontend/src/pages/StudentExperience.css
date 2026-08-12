@@ -1,0 +1,1309 @@
+/* Student details */
+.app-shell .student-details-page,
+.app-shell .edit-student-page {
+  font-family: inherit;
+}
+
+.app-shell .student-details-page.details_main,
+.app-shell .edit-student-page.edit-main {
+  width: auto;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 24px;
+  overflow: visible;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.app-shell .student-record-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.app-shell .student-details-page .details-section {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(15 23 42 / 5%);
+}
+
+.app-shell .student-profile-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 23px 25px;
+  border-bottom: 1px solid #e8edf3;
+  background: linear-gradient(120deg, #f7faff, #fff 62%);
+}
+
+.app-shell .student-profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+}
+
+.app-shell .student-profile-avatar {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border: 1px solid #bfdbfe;
+  border-radius: 17px;
+  background: linear-gradient(145deg, #dbeafe, #e0e7ff);
+  color: #1d4ed8;
+  font-size: 1rem;
+  font-weight: 850;
+  box-shadow: 0 8px 18px rgb(37 99 235 / 12%);
+}
+
+.app-shell .student-profile-kicker {
+  display: block;
+  margin-bottom: 3px;
+  color: #2563eb;
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.app-shell .student-profile-hero h2 {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: #142033;
+  font-size: 1.28rem;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+
+.app-shell .student-profile-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 7px;
+  color: #64748b;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.7rem;
+}
+
+.app-shell .student-profile-meta .status-badge {
+  min-width: 0;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.65rem;
+}
+
+.app-shell .student-profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.app-shell .student-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid #dbe3ed;
+  border-radius: 10px;
+  background: #fff;
+  color: #475569;
+  font-size: 0.7rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.app-shell .student-action:hover {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.app-shell .student-action.primary {
+  border-color: #1859a9;
+  background: #1859a9;
+  color: #fff;
+  box-shadow: 0 7px 15px rgb(24 89 169 / 18%);
+}
+
+.app-shell .student-details-page .details-section > .section {
+  margin: 18px 20px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #e5eaf1;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: none;
+}
+
+.app-shell .student-details-page .section-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  padding: 12px 15px;
+  border-bottom: 1px solid #edf2f7;
+  border-radius: 0;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.app-shell .student-details-page .section-title svg {
+  color: #2563eb;
+}
+
+.app-shell .student-details-page .details-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0;
+  padding: 4px 15px 12px;
+}
+
+.app-shell .student-details-page .details-info-grid p {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 66px;
+  margin: 0;
+  padding: 12px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  border-radius: 0;
+  background: transparent;
+  color: #475569;
+  font-size: 0.77rem;
+  line-height: 1.45;
+}
+
+.app-shell .student-details-page .details-info-grid p strong {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.app-shell .student-academic-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid #e2e8f0;
+  border-bottom: 0;
+  border-radius: 18px 18px 0 0;
+  background: linear-gradient(90deg, #fff, #f8fbff);
+}
+
+.app-shell .student-academic-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.app-shell .student-academic-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.app-shell .student-academic-heading h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 0.95rem;
+}
+
+.app-shell .student-academic-heading p {
+  margin: 3px 0 0;
+  color: #94a3b8;
+  font-size: 0.7rem;
+}
+
+.app-shell .student-academic-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 0 0 18px 18px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(15 23 42 / 5%);
+}
+
+.app-shell .student-academic-table {
+  min-width: 1280px;
+  margin: 0;
+  border: 0;
+  table-layout: auto;
+  font-size: 0.73rem;
+}
+
+.app-shell .student-academic-table thead {
+  background: #f8fafc;
+}
+
+.app-shell .student-academic-table th,
+.app-shell .student-academic-table td {
+  padding: 13px 12px;
+  border-bottom: 1px solid #edf2f7;
+  color: #475569;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.app-shell .student-academic-table th {
+  color: #64748b;
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.app-shell .student-academic-table tbody tr,
+.app-shell .student-academic-table tbody tr:nth-child(odd),
+.app-shell .student-academic-table tbody tr:nth-child(even) {
+  background: #fff;
+}
+
+.app-shell .student-academic-table tbody tr:hover {
+  background: #f8fbff;
+}
+
+/* Update student status dialog */
+.app-shell .student-status-overlay {
+  padding: 20px;
+  background: rgb(6 17 33 / 64%);
+  backdrop-filter: blur(7px);
+}
+
+.app-shell .student-status-modal {
+  width: min(100%, 540px);
+  max-width: 540px;
+  max-height: min(90vh, 680px);
+  padding: 0;
+  overflow-y: auto;
+  border: 1px solid rgb(255 255 255 / 65%);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 30px 80px rgb(6 17 33 / 32%);
+  text-align: left;
+}
+
+.app-shell .student-status-header {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 32px;
+  gap: 13px;
+  align-items: flex-start;
+  padding: 24px 25px 20px;
+  border-bottom: 1px solid #e4eaf2;
+  background: linear-gradient(180deg, #f7faff, #fff);
+}
+
+.app-shell .student-status-header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: #dcecff;
+  color: #1859a9;
+}
+
+.app-shell .student-status-header p {
+  margin: 0 0 3px;
+  color: #246fc8;
+  font-size: 0.58rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.app-shell .student-status-header h3 {
+  margin: 0;
+  color: #142033;
+  font-size: 1.18rem;
+  font-weight: 780;
+  letter-spacing: -0.025em;
+}
+
+.app-shell .student-status-header > div:nth-child(2) > span {
+  display: block;
+  margin-top: 5px;
+  color: #6f7c90;
+  font-size: 0.71rem;
+  line-height: 1.5;
+}
+
+.app-shell .student-status-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: #eef2f7;
+  color: #6f7c90;
+}
+
+.app-shell .student-status-close:hover {
+  border: 0;
+  background: #e2e8f0;
+  color: #142033;
+}
+
+.app-shell .student-status-body {
+  padding: 22px 25px;
+}
+
+.app-shell .student-status-identity {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  gap: 11px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #e8edf3;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.app-shell .student-status-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #dbeafe, #e0e7ff);
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.app-shell .student-status-identity > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.app-shell .student-status-identity strong {
+  overflow: hidden;
+  color: #1e293b;
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-shell .student-status-identity > div > span {
+  margin-top: 3px;
+  color: #94a3b8;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.64rem;
+}
+
+.app-shell .student-status-identity .status-badge {
+  min-width: 0;
+  padding: 5px 8px;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  white-space: nowrap;
+}
+
+.app-shell .student-status-options {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 19px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.app-shell .student-status-options legend {
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.app-shell .student-status-option {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 18px;
+  gap: 11px;
+  align-items: center;
+  min-height: 70px;
+  margin: 0;
+  padding: 12px 13px;
+  border: 1px solid #dbe3ed;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.app-shell .student-status-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.app-shell .student-status-option:hover {
+  border-color: #bfdbfe;
+  background: #fbfdff;
+}
+
+.app-shell .student-status-option.active.selected {
+  border-color: #86efac;
+  background: #f0fdf4;
+  box-shadow: 0 0 0 3px rgb(34 197 94 / 8%);
+}
+
+.app-shell .student-status-option.inactive.selected {
+  border-color: #fca5a5;
+  background: #fef2f2;
+  box-shadow: 0 0 0 3px rgb(239 68 68 / 7%);
+}
+
+.app-shell .student-status-option-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.app-shell .student-status-option.active.selected .student-status-option-icon {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.app-shell .student-status-option.inactive.selected .student-status-option-icon {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.app-shell .student-status-option-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.app-shell .student-status-option-copy strong {
+  color: #1e293b;
+  font-size: 0.77rem;
+}
+
+.app-shell .student-status-option-copy small {
+  color: #7c899c;
+  font-size: 0.65rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.app-shell .student-status-radio {
+  width: 17px;
+  height: 17px;
+  border: 2px solid #cbd5e1;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: inset 0 0 0 3px #fff;
+}
+
+.app-shell .student-status-option.active.selected .student-status-radio {
+  border-color: #16a34a;
+  background: #16a34a;
+}
+
+.app-shell .student-status-option.inactive.selected .student-status-radio {
+  border-color: #dc2626;
+  background: #dc2626;
+}
+
+.app-shell .student-status-option:focus-within {
+  outline: 3px solid rgb(37 99 235 / 14%);
+  outline-offset: 2px;
+}
+
+.app-shell .student-status-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 11px;
+  border: 1px solid #e8edf3;
+  border-radius: 10px;
+  background: #f6f8fb;
+  color: #64748b;
+  font-size: 0.65rem;
+  line-height: 1.45;
+}
+
+.app-shell .student-status-note svg {
+  flex: 0 0 auto;
+  color: #246fc8;
+}
+
+.app-shell .student-status-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  padding: 0 25px 24px;
+}
+
+.app-shell .student-status-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 41px;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-size: 0.71rem;
+  font-weight: 750;
+}
+
+.app-shell .student-status-cancel {
+  border: 1px solid #dbe3ed;
+  background: #fff;
+  color: #475569;
+}
+
+.app-shell .student-status-save {
+  border: 1px solid #1859a9;
+  background: #1859a9;
+  color: #fff;
+  box-shadow: 0 7px 16px rgb(24 89 169 / 20%);
+}
+
+.app-shell .student-status-save:hover:not(:disabled) {
+  border-color: #104b91;
+  background: #104b91;
+  color: #fff;
+}
+
+.app-shell .student-status-save:disabled {
+  border-color: #cbd5e1;
+  background: #cbd5e1;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Add / edit academic information dialog */
+.app-shell .academic-info-overlay {
+  padding: 20px;
+  background: rgb(6 17 33 / 66%);
+  backdrop-filter: blur(7px);
+}
+
+.app-shell .academic-info-modal {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 720px);
+  max-width: 720px;
+  max-height: min(calc(100vh - 32px), 820px);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 65%);
+  border-radius: 19px;
+  background: #fff;
+  box-shadow: 0 32px 86px rgb(6 17 33 / 34%);
+  text-align: left;
+}
+
+.app-shell .academic-info-modal-header {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) 32px;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 23px 25px 19px;
+  border-bottom: 1px solid #e4eaf2;
+  background: linear-gradient(180deg, #f8faff, #fff);
+}
+
+.app-shell .academic-info-header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.app-shell .academic-info-modal-header p {
+  margin: 0 0 3px;
+  color: #4f46e5;
+  font-size: 0.58rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.app-shell .academic-info-modal-header h3 {
+  margin: 0;
+  color: #142033;
+  font-size: 1.2rem;
+  font-weight: 780;
+  letter-spacing: -0.025em;
+}
+
+.app-shell .academic-info-modal-header > div:nth-child(2) > span {
+  display: block;
+  margin-top: 5px;
+  color: #6f7c90;
+  font-size: 0.71rem;
+  line-height: 1.5;
+}
+
+.app-shell .academic-info-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: #eef2f7;
+  color: #6f7c90;
+}
+
+.app-shell .academic-info-close:hover {
+  border: 0;
+  background: #e2e8f0;
+  color: #142033;
+}
+
+.app-shell .academic-info-modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+  padding: 20px 25px 24px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.app-shell .academic-info-student-summary {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  gap: 11px;
+  align-items: center;
+  padding: 11px 12px;
+  border: 1px solid #e8edf3;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.app-shell .academic-info-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #dbeafe, #e0e7ff);
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.app-shell .academic-info-student-summary > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.app-shell .academic-info-student-summary strong {
+  overflow: hidden;
+  color: #1e293b;
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-shell .academic-info-student-summary > div > span {
+  margin-top: 3px;
+  color: #94a3b8;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.63rem;
+}
+
+.app-shell .academic-record-id {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.62rem;
+  font-weight: 750;
+}
+
+.app-shell .academic-info-form {
+  display: block;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-shell .academic-form-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 19px 0 12px;
+}
+
+.app-shell .academic-form-section-heading.secondary {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #edf2f7;
+}
+
+.app-shell .academic-form-section-heading > span {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.app-shell .academic-form-section-heading.secondary > span {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.app-shell .academic-form-section-heading h4 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 0.78rem;
+}
+
+.app-shell .academic-form-section-heading p {
+  margin: 2px 0 0;
+  color: #94a3b8;
+  font-size: 0.64rem;
+}
+
+.app-shell .academic-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.app-shell .academic-form-grid.period {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.app-shell .academic-info-form .form-group {
+  min-width: 0;
+  margin: 0;
+}
+
+.app-shell .academic-info-form label,
+.app-shell .academic-info-form .label {
+  display: block;
+  margin: 0 0 6px;
+  color: #475569;
+  font-size: 0.68rem;
+  font-weight: 750;
+}
+
+.app-shell .academic-info-form .form-control {
+  width: 100%;
+  height: 43px;
+  padding: 0 12px;
+  border: 1px solid #dbe3ed;
+  border-radius: 10px;
+  outline: none;
+  background: #fafbfd;
+  color: #142033;
+  font-size: 0.73rem;
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.app-shell .academic-info-form .form-control:focus {
+  border-color: #4f46e5;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgb(79 70 229 / 10%);
+}
+
+.app-shell .academic-info-form .form-control:disabled {
+  border-style: dashed;
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.app-shell .academic-info-form .error-message {
+  margin-top: 5px;
+  padding: 0;
+  background: transparent;
+  color: #c43e56;
+  font-size: 0.61rem;
+}
+
+.app-shell .academic-info-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 10px 11px;
+  border: 1px solid #e8edf3;
+  border-radius: 10px;
+  background: #f6f8fb;
+  color: #64748b;
+  font-size: 0.64rem;
+  line-height: 1.45;
+}
+
+.app-shell .academic-info-note svg {
+  flex: 0 0 auto;
+  color: #4f46e5;
+}
+
+.app-shell .academic-info-actions {
+  position: sticky;
+  z-index: 4;
+  bottom: -24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin: 20px -25px -24px;
+  padding: 16px 25px 24px;
+  border-top: 1px solid #edf2f7;
+  background: rgb(255 255 255 / 96%);
+  box-shadow: 0 -10px 24px rgb(15 23 42 / 5%);
+  backdrop-filter: blur(8px);
+}
+
+.app-shell .academic-info-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 41px;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 750;
+}
+
+.app-shell .academic-info-cancel {
+  border: 1px solid #dbe3ed;
+  background: #fff;
+  color: #475569;
+}
+
+.app-shell .academic-info-save {
+  border: 1px solid #4f46e5;
+  background: #4f46e5;
+  color: #fff;
+  box-shadow: 0 7px 16px rgb(79 70 229 / 20%);
+}
+
+.app-shell .academic-info-save:hover {
+  border-color: #4338ca;
+  background: #4338ca;
+  color: #fff;
+}
+
+/* Edit student */
+.app-shell .student-edit-surface {
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(15 23 42 / 5%);
+}
+
+.app-shell .student-edit-intro {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e8edf3;
+  background: linear-gradient(120deg, #f7faff, #fff 65%);
+}
+
+.app-shell .student-edit-intro .student-profile-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  font-size: 0.82rem;
+}
+
+.app-shell .student-edit-intro > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.app-shell .student-edit-intro strong {
+  color: #142033;
+  font-size: 0.9rem;
+}
+
+.app-shell .student-edit-intro > div > span {
+  color: #64748b;
+  font-size: 0.7rem;
+}
+
+.app-shell .student-edit-form {
+  display: block;
+  max-width: none;
+  margin: 0;
+  padding: 22px 24px 26px;
+}
+
+.app-shell .student-edit-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 7px 0 13px;
+  padding-top: 18px;
+  border-top: 1px solid #edf2f7;
+}
+
+.app-shell .student-edit-section-heading:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.app-shell .student-edit-section-heading > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.app-shell .student-edit-section-heading h3 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 0.83rem;
+}
+
+.app-shell .student-edit-section-heading p {
+  margin: 2px 0 0;
+  color: #94a3b8;
+  font-size: 0.66rem;
+}
+
+.app-shell .student-edit-form .lrn_div,
+.app-shell .student-edit-form .name_div,
+.app-shell .student-edit-form .birth_div,
+.app-shell .student-edit-form .contact_div,
+.app-shell .student-edit-form .place_div,
+.app-shell .student-edit-form .hw_div,
+.app-shell .student-edit-form .current_div,
+.app-shell .student-edit-form .parent_div {
+  display: grid;
+  align-items: start;
+  gap: 13px;
+  margin: 0 0 18px;
+}
+
+.app-shell .student-edit-form .lrn_div { grid-template-columns: minmax(240px, 0.5fr); }
+.app-shell .student-edit-form .name_div { grid-template-columns: 1fr 1fr 1fr 0.45fr; }
+.app-shell .student-edit-form .birth_div { grid-template-columns: 0.8fr 1.4fr 0.5fr 0.65fr; }
+.app-shell .student-edit-form .contact_div { grid-template-columns: 1fr 1.5fr; }
+.app-shell .student-edit-form .place_div { grid-template-columns: 1fr 1fr; }
+.app-shell .student-edit-form .hw_div { grid-template-columns: 1fr 1fr; max-width: 520px; }
+.app-shell .student-edit-form .current_div { grid-template-columns: 0.55fr 1.4fr 1.1fr 1fr; }
+.app-shell .student-edit-form .parent_div { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+.app-shell .student-edit-form .field-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.app-shell .student-edit-form label,
+.app-shell .student-edit-form .label,
+.app-shell .student-edit-form .m-label,
+.app-shell .student-edit-form .l-label,
+.app-shell .student-edit-form .s-label,
+.app-shell .student-edit-form .plabel,
+.app-shell .student-edit-form .alabel,
+.app-shell .student-edit-form .xlabel,
+.app-shell .student-edit-form .elabel,
+.app-shell .student-edit-form .natlabel,
+.app-shell .student-edit-form .wlabel,
+.app-shell .student-edit-form .clabel,
+.app-shell .student-edit-form .dlabel {
+  margin: 0 0 6px;
+  color: #475569;
+  font-size: 0.69rem;
+  font-weight: 750;
+}
+
+.app-shell .student-edit-form input,
+.app-shell .student-edit-form select,
+.app-shell .student-edit-form .lrn_input,
+.app-shell .student-edit-form .f-input,
+.app-shell .student-edit-form .m-input,
+.app-shell .student-edit-form .l-input,
+.app-shell .student-edit-form .s-input,
+.app-shell .student-edit-form .b-input,
+.app-shell .student-edit-form .p-input,
+.app-shell .student-edit-form .a-input,
+.app-shell .student-edit-form .x-input,
+.app-shell .student-edit-form .con_input,
+.app-shell .student-edit-form .em_input,
+.app-shell .student-edit-form .rel_input,
+.app-shell .student-edit-form .nat_input,
+.app-shell .student-edit-form .he_input,
+.app-shell .student-edit-form .we_input,
+.app-shell .student-edit-form .hnum_input,
+.app-shell .student-edit-form .bar_input,
+.app-shell .student-edit-form .ct_input,
+.app-shell .student-edit-form .prov_input,
+.app-shell .student-edit-form .gname_input,
+.app-shell .student-edit-form .mname_input,
+.app-shell .student-edit-form .lname_input,
+.app-shell .student-edit-form .contact_input {
+  width: 100%;
+  height: 43px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid #dbe3ed;
+  border-radius: 10px;
+  outline: none;
+  background: #fafbfd;
+  color: #142033;
+  font-size: 0.75rem;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.app-shell .student-edit-form input:focus,
+.app-shell .student-edit-form select:focus {
+  border-color: #246fc8;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgb(36 111 200 / 11%);
+}
+
+.app-shell .student-edit-form input:disabled {
+  border-style: dashed;
+  background: #f1f5f9;
+  color: #64748b;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  cursor: not-allowed;
+}
+
+.app-shell .student-edit-form .error {
+  margin-top: 5px;
+  color: #c43e56;
+  font-size: 0.62rem;
+}
+
+.app-shell .student-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin: 25px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid #edf2f7;
+}
+
+.app-shell .student-edit-actions .submit-btn,
+.app-shell .student-edit-actions .submit-btn-cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 135px;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 750;
+}
+
+.app-shell .student-edit-actions .submit-btn {
+  order: 2;
+  border: 1px solid #1859a9;
+  background: #1859a9;
+  color: #fff;
+  box-shadow: 0 7px 16px rgb(24 89 169 / 20%);
+}
+
+.app-shell .student-edit-actions .submit-btn-cancel {
+  order: 1;
+  border: 1px solid #dbe3ed;
+  background: #fff;
+  color: #475569;
+}
+
+@media (max-width: 1080px) {
+  .app-shell .student-profile-hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .app-shell .student-profile-actions {
+    justify-content: flex-start;
+  }
+
+  .app-shell .student-edit-form .name_div,
+  .app-shell .student-edit-form .birth_div,
+  .app-shell .student-edit-form .current_div,
+  .app-shell .student-edit-form .parent_div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .app-shell .student-details-page.details_main,
+  .app-shell .edit-student-page.edit-main {
+    padding: 16px;
+  }
+
+  .app-shell .student-profile-identity {
+    align-items: flex-start;
+  }
+
+  .app-shell .student-profile-actions,
+  .app-shell .student-action {
+    width: 100%;
+  }
+
+  .app-shell .student-details-page .details-info-grid,
+  .app-shell .student-edit-form .lrn_div,
+  .app-shell .student-edit-form .name_div,
+  .app-shell .student-edit-form .birth_div,
+  .app-shell .student-edit-form .contact_div,
+  .app-shell .student-edit-form .place_div,
+  .app-shell .student-edit-form .hw_div,
+  .app-shell .student-edit-form .current_div,
+  .app-shell .student-edit-form .parent_div {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell .student-academic-heading p,
+  .app-shell .student-edit-section-heading p {
+    display: none;
+  }
+
+  .app-shell .student-edit-form {
+    padding: 18px;
+  }
+
+  .app-shell .student-edit-actions {
+    flex-direction: column-reverse;
+  }
+
+  .app-shell .student-edit-actions .submit-btn,
+  .app-shell .student-edit-actions .submit-btn-cancel {
+    width: 100%;
+  }
+
+  .app-shell .student-status-header {
+    grid-template-columns: 40px minmax(0, 1fr) 30px;
+    padding: 20px;
+  }
+
+  .app-shell .student-status-header-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .app-shell .student-status-body {
+    padding: 18px 20px;
+  }
+
+  .app-shell .student-status-identity {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .app-shell .student-status-identity .status-badge {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .app-shell .student-status-actions {
+    flex-direction: column-reverse;
+    padding: 0 20px 20px;
+  }
+
+  .app-shell .student-status-actions button {
+    width: 100%;
+  }
+
+  .app-shell .academic-info-modal-header {
+    grid-template-columns: 40px minmax(0, 1fr) 30px;
+    padding: 20px;
+  }
+
+  .app-shell .academic-info-header-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .app-shell .academic-info-modal-body {
+    padding: 18px 20px 20px;
+  }
+
+  .app-shell .academic-info-student-summary {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .app-shell .academic-record-id {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .app-shell .academic-form-grid,
+  .app-shell .academic-form-grid.period {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell .academic-form-section-heading p {
+    display: none;
+  }
+
+  .app-shell .academic-info-actions {
+    bottom: -20px;
+    flex-direction: column-reverse;
+    margin: 18px -20px -20px;
+    padding: 14px 20px calc(20px + env(safe-area-inset-bottom));
+  }
+
+  .app-shell .academic-info-actions button {
+    width: 100%;
+  }
+}

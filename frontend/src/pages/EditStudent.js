@@ -3,7 +3,10 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import './edit.css'
+import './edit.css';
+import './StudentExperience.css';
+import WorkspacePageHeader from "../components/WorkspacePageHeader";
+import { FiArrowLeft, FiHome, FiSave, FiShield, FiUser } from "react-icons/fi";
 
 function EditStudent() {
   const navigate = useNavigate();
@@ -241,7 +244,7 @@ function EditStudent() {
   };
 
   return (
-    <div className="edit-main">
+    <div className="container workspace-page edit-student-page edit-main">
       {showSuccessMessage && (
         <div className="success-message">
           Student information updated successfully!
@@ -258,8 +261,14 @@ function EditStudent() {
           </div>
         </div>
       )}
-      <div className="form-container">
-        <h2 className="title">Edit Student Information</h2>
+      <WorkspacePageHeader
+        eyebrow="Student records"
+        title="Edit student information"
+        description={`Update the personal, contact, address, and guardian details for LRN ${studentData.student_id}.`}
+        actions={<button type="button" className="workspace-secondary-action" onClick={() => navigate(`/student/${studentData.student_id}`)}><FiArrowLeft /> Back to profile</button>}
+      />
+      <div className="form-container student-edit-surface">
+        <div className="student-edit-intro"><span className="student-profile-avatar">{`${studentData.first_name?.charAt(0) || ''}${studentData.last_name?.charAt(0) || ''}`.toUpperCase()}</span><div><strong>{`${studentData.first_name} ${studentData.last_name}`}</strong><span>Keep this learner’s record accurate and up to date.</span></div></div>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -267,15 +276,15 @@ function EditStudent() {
           enableReinitialize
         >
           {({ isSubmitting }) => (
-          <Form>
+          <Form className="student-edit-form">
+            <div className="student-edit-section-heading"><span><FiShield /></span><div><h3>Record identifier</h3><p>The learner reference number cannot be changed.</p></div></div>
             <div className="lrn_div">
-              <label htmlFor="student_id" className="label">Learner's Reference Number:</label> <br></br>
+              <label htmlFor="student_id" className="label">Learner's Reference Number</label>
               <Field type="text" id="student_id" name="student_id" className="lrn_input" disabled={true} readOnly/>
               <ErrorMessage name="student_id" component="div" className="error" />
             </div>
 
-            <br></br>
-
+            <div className="student-edit-section-heading"><span><FiUser /></span><div><h3>Personal information</h3><p>Identity, birth, and basic learner details.</p></div></div>
             <div className = "name_div">
               <div className="field-group">
               <label htmlFor="first_name" className="label">First Name:</label> 
@@ -299,8 +308,6 @@ function EditStudent() {
               <Field type="text" id="suffix" name="suffix" className = "s-input"/>
             </div>
             </div>
-
-            <br></br>
 
             <div className="birth_div">
             <div className="field-group">
@@ -333,8 +340,7 @@ function EditStudent() {
             </div>
             </div>
 
-            <br></br>
-
+            <div className="student-edit-section-heading"><span><FiUser /></span><div><h3>Contact and profile</h3><p>Contact channels and additional personal information.</p></div></div>
             <div className="contact_div">
             <div className="field-group">
               <label htmlFor="contact_num" className="label">Contact Number:</label>
@@ -348,8 +354,6 @@ function EditStudent() {
               <ErrorMessage name="email" component="div" className="error" />
             </div>
             </div>
-
-          <br></br>
 
             <div className="place_div">
             <div className="field-group">
@@ -365,8 +369,6 @@ function EditStudent() {
             </div>
             </div>
 
-            <br></br>
-
             <div className="hw_div">
             <div className="field-group">
               <label htmlFor="height" className="label">Height (cm):</label>
@@ -381,9 +383,7 @@ function EditStudent() {
             </div>
             </div>
 
-            <br></br>
-
-            <h3 className="label">Current Address</h3>
+            <div className="student-edit-section-heading"><span><FiHome /></span><div><h3>Current address</h3><p>The learner’s present place of residence.</p></div></div>
             <div className="current_div">
             <div className="field-group">
               <label htmlFor="currentAddressData.houseNo" className="clabel">House Number:</label>
@@ -409,9 +409,7 @@ function EditStudent() {
             </div>
             </div>
 
-            <br></br>
-
-            <h3 className="label">Permanent Address</h3>
+            <div className="student-edit-section-heading"><span><FiHome /></span><div><h3>Permanent address</h3><p>The learner’s registered permanent residence.</p></div></div>
             <div className="current_div">
             <div className="field-group">
               <label htmlFor="permanentAddressData.houseNo" className="clabel">House Number:</label>
@@ -437,9 +435,7 @@ function EditStudent() {
             </div>
             </div>
 
-            <br></br>
-
-            <h3 className="label">Parent/Guardian Information</h3>
+            <div className="student-edit-section-heading"><span><FiShield /></span><div><h3>Parent or guardian</h3><p>Primary family contact for this learner.</p></div></div>
             <div className="parent_div">
             <div className="field-group">
               <label htmlFor="PARENT_GUARDIAN_T.pgFirstName" className="clabel">First Name:</label>
@@ -465,19 +461,16 @@ function EditStudent() {
             </div>
             </div>
 
-            <br></br>
-            <br></br>
-
-            <div className="button-group">
+            <div className="button-group student-edit-actions">
               <button type="submit" className="submit-btn" disabled={isSubmitting}>
-                {isSubmitting ? "Updating..." : "Update Student"}
+                {isSubmitting ? "Updating..." : <><FiSave /> Save changes</>}
               </button>
               <button 
                 type="button" 
                 className="submit-btn-cancel"
                 onClick={() => navigate(`/student/${studentData.student_id}`)}
               >
-                Cancel
+                <FiArrowLeft /> Cancel
               </button>
             </div>
 
