@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import "./stylestrand.css";
 import { useAuth } from '../context/AuthContext';
-import { FiLayers, FiPlus, FiX } from 'react-icons/fi';
+import { FiArrowUpRight, FiEdit3, FiLayers, FiPlus, FiTrash2, FiUsers, FiX } from 'react-icons/fi';
 import WorkspacePageHeader from '../components/WorkspacePageHeader';
 import ConfirmationModal from '../components/ConfirmationModal';
 import "./DepartmentForms.css";
@@ -150,55 +150,45 @@ function Departments() {
 
       <div className="listOfStrands">
         {listOfDepartments.length === 0 ? (
-          <p>No departments found.</p>
+          <div className="collection-empty department-empty"><FiLayers /><strong>No departments yet</strong><span>Create a department to begin organizing strands and sections.</span></div>
         ) : (
-          listOfDepartments.map((department, index) => (
-            <div key={index} className="strand" onClick={() => handleDepartmentClick(department)}>
+          listOfDepartments.map((department) => (
+            <article key={department.department_id} className="strand department-instance" onClick={() => handleDepartmentClick(department)}>
               <div className="strand-header">
-                <h3 className="strandName">
-                  {department.department_name}
-                  <span className="student-count">
-                    {department.currentStudentCount}
-                  </span>
-                </h3>
+                <div className="department-instance-icon"><FiLayers /></div>
                 {!privileges?.departmentId && (
                   <div className="department-actions">
                     <button 
-                      className="edit-button"
+                      className="instance-action edit"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleOpenEditModal(department);
                       }}
-                    >
-                      Edit
-                    </button>
+                      title="Edit department"
+                      aria-label={`Edit ${department.department_name}`}
+                    ><FiEdit3 /></button>
                     <button 
-                      className="delete-button"
+                      className="instance-action delete"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleOpenDeleteModal(department);
                       }}
-                    >
-                      Delete
-                    </button>
+                      title="Delete department"
+                      aria-label={`Delete ${department.department_name}`}
+                    ><FiTrash2 /></button>
                   </div>
                 )}
               </div>
+              <h3 className="strandName">{department.department_name}</h3>
               <p className="strandDescription">{department.department_description}</p>
-            </div>
+              <footer className="department-instance-footer">
+                <span><FiUsers /> <strong>{department.currentStudentCount || 0}</strong> students</span>
+                <span className="open-department">Open department <FiArrowUpRight /></span>
+              </footer>
+            </article>
           ))
         )}
       </div>
-
-      <style>{`
-        .student-count {
-          font-size: 0.8em;
-          color: #666;
-          margin-left: 10px;
-          font-weight: normal;
-          align-text: left
-        }
-      `}</style>
 
       {/* Add Department Modal */}
       {showAddModal && (

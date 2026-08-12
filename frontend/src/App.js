@@ -38,6 +38,7 @@ import Reports from './pages/Reports';
 import DUser from "./pages/DUser";
 import AcademicInfo from "./pages/AcademicInfo";
 import { ConfirmationProvider } from "./context/ConfirmationContext";
+import "./styles/CollectionInstances.css";
 
 function AppWrapper() {
   return (

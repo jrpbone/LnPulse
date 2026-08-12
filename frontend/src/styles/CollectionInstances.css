@@ -1,0 +1,594 @@
+.app-shell .collection-empty,
+.app-shell .table-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 170px;
+  padding: 28px;
+  color: #64748b;
+  text-align: center;
+}
+
+.app-shell .collection-empty svg,
+.app-shell .table-empty-state svg {
+  width: 28px;
+  height: 28px;
+  color: #94a3b8;
+}
+
+.app-shell .collection-empty strong,
+.app-shell .table-empty-state strong {
+  color: #1e293b;
+  font-size: 0.96rem;
+}
+
+.app-shell .collection-empty span,
+.app-shell .table-empty-state span {
+  font-size: 0.82rem;
+}
+
+.app-shell .instance-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.app-shell .instance-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  color: #64748b;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 4%);
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.app-shell .instance-action:hover {
+  transform: translateY(-1px);
+}
+
+.app-shell .instance-action.view:hover {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.app-shell .instance-action.edit:hover {
+  border-color: #c7d2fe;
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.app-shell .instance-action.print:hover {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.app-shell .instance-action.delete:hover {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* Student instances */
+.app-shell .student-panel .table-wrapper {
+  min-height: 0;
+  overflow-x: auto;
+}
+
+.app-shell .student-panel table {
+  min-width: 1160px;
+}
+
+.app-shell .student-panel tbody tr {
+  transition: background 150ms ease, box-shadow 150ms ease;
+}
+
+.app-shell .student-panel tbody tr:hover {
+  background: #f8fbff;
+  box-shadow: inset 3px 0 #3b82f6;
+}
+
+.app-shell .student-panel td {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  vertical-align: middle;
+}
+
+.app-shell .student-lrn {
+  display: inline-flex;
+  padding: 5px 9px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #475569;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.app-shell .student-identity,
+.app-shell .user-identity {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.app-shell .student-avatar,
+.app-shell .user-avatar {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #dbeafe, #e0e7ff);
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.app-shell .student-identity > :last-child,
+.app-shell .user-identity > span:last-child {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.app-shell .student-identity strong,
+.app-shell .user-identity strong {
+  color: #172033;
+  font-size: 0.88rem;
+  line-height: 1.25;
+}
+
+.app-shell .student-identity small,
+.app-shell .user-identity small {
+  margin-top: 3px;
+  color: #94a3b8;
+  font-size: 0.72rem;
+}
+
+.app-shell .gender-chip,
+.app-shell .assignment-chip,
+.app-shell .username-pill {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.app-shell .gender-chip {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.app-shell .email-instance {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 190px;
+  color: #475569;
+  font-size: 0.8rem;
+}
+
+.app-shell .email-instance svg {
+  flex: 0 0 auto;
+  color: #94a3b8;
+}
+
+.app-shell .email-instance span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-shell .record-date {
+  display: flex;
+  flex-direction: column;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.app-shell .record-date small {
+  color: #94a3b8;
+  font-size: 0.68rem;
+  font-weight: 500;
+}
+
+/* Department instances */
+.app-shell .departments-page .strand-grid {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.app-shell .department-instance {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  padding: 22px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: linear-gradient(150deg, #fff 70%, #f8fbff);
+  box-shadow: 0 7px 22px rgb(15 23 42 / 5%);
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.app-shell .department-instance:hover {
+  transform: translateY(-3px);
+  border-color: #bfdbfe;
+  box-shadow: 0 16px 30px rgb(37 99 235 / 10%);
+}
+
+.app-shell .department-instance::after {
+  position: absolute;
+  top: -42px;
+  right: -38px;
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  background: rgb(59 130 246 / 7%);
+  content: "";
+  pointer-events: none;
+}
+
+.app-shell .department-instance-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 18px;
+  border-radius: 13px;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.app-shell .department-instance .department-actions {
+  position: absolute;
+  z-index: 1;
+  top: 17px;
+  right: 17px;
+  display: flex;
+  gap: 6px;
+}
+
+.app-shell .department-instance .strandName {
+  margin: 0 0 8px;
+  color: #172033;
+  font-size: 1.05rem;
+}
+
+.app-shell .department-instance .strandDescription {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: #64748b;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.app-shell .department-instance-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid #edf2f7;
+  color: #64748b;
+  font-size: 0.76rem;
+}
+
+.app-shell .department-instance-footer span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.app-shell .department-instance-footer .open-department {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+/* Curriculum instances */
+.app-shell .curriculum-strand-instance {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 108px;
+  padding: 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgb(15 23 42 / 4%);
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.app-shell .curriculum-strand-instance:hover,
+.app-shell .curriculum-strand-instance.active {
+  transform: translateY(-2px);
+  border-color: #93c5fd;
+  box-shadow: 0 12px 24px rgb(37 99 235 / 9%);
+}
+
+.app-shell .curriculum-strand-instance.active {
+  background: linear-gradient(145deg, #eff6ff, #fff);
+}
+
+.app-shell .curriculum-strand-icon,
+.app-shell .curriculum-strand-arrow {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+}
+
+.app-shell .curriculum-strand-icon {
+  width: 40px;
+  height: 40px;
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.app-shell .curriculum-strand-arrow {
+  width: 30px;
+  height: 30px;
+  margin-left: auto;
+  background: #f8fafc;
+  color: #94a3b8;
+}
+
+.app-shell .curriculum-strand-instance.active .curriculum-strand-arrow {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.app-shell .curriculum-table td {
+  vertical-align: top;
+}
+
+.app-shell .curriculum-table .subject-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
+  margin-bottom: 9px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #60a5fa;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: 0 2px 7px rgb(15 23 42 / 4%);
+}
+
+.app-shell .curriculum-table .subject-item.specialized-subject {
+  border-left-color: #8b5cf6;
+}
+
+.app-shell .subject-sequence {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.app-shell .specialized-subject .subject-sequence {
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+
+.app-shell .curriculum-table .subject-item strong {
+  display: block;
+  color: #1e293b;
+  font-size: 0.79rem;
+  line-height: 1.35;
+}
+
+.app-shell .curriculum-table .subject-description {
+  margin-top: 4px;
+  color: #94a3b8;
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+.app-shell .curriculum-table .remove-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 27px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.app-shell .curriculum-table .remove-button:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.app-shell .subject-empty-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70px;
+  margin-bottom: 9px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 11px;
+  background: #f8fafc;
+  color: #94a3b8;
+  font-size: 0.72rem;
+}
+
+.app-shell .curriculum-table .add-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 36px;
+  border: 1px dashed #93c5fd;
+  border-radius: 10px;
+  background: #f8fbff;
+  color: #2563eb;
+  font-size: 0.72rem;
+  font-weight: 750;
+}
+
+/* User instances */
+.app-shell .users-page .table-container {
+  overflow: hidden;
+  padding: 0;
+}
+
+.app-shell .users-page .table-wrapper {
+  overflow-x: auto;
+}
+
+.app-shell .collection-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #edf2f7;
+  background: linear-gradient(90deg, #fff, #f8fbff);
+}
+
+.app-shell .collection-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-shell .collection-section-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.app-shell .collection-section-icon.adviser,
+.app-shell .user-avatar.adviser {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.app-shell .collection-section-heading h2 {
+  margin: 0;
+  color: #172033;
+  font-size: 0.98rem;
+}
+
+.app-shell .collection-section-heading p {
+  margin: 3px 0 0;
+  color: #94a3b8;
+  font-size: 0.74rem;
+}
+
+.app-shell .collection-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.app-shell .users-page .table {
+  min-width: 720px;
+}
+
+.app-shell .users-page .table th {
+  text-align: left;
+}
+
+.app-shell .users-page .table th:last-child,
+.app-shell .users-page .table td:last-child {
+  text-align: center;
+}
+
+.app-shell .users-page .table td {
+  padding-top: 14px;
+  padding-bottom: 14px;
+  vertical-align: middle;
+}
+
+.app-shell .users-page .table tbody tr:hover {
+  background: #f8fbff;
+}
+
+.app-shell .username-pill {
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.app-shell .assignment-chip.department {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.app-shell .assignment-chip.section {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+@media (max-width: 720px) {
+  .app-shell .department-instance {
+    min-height: 200px;
+  }
+
+  .app-shell .collection-section-heading {
+    align-items: flex-start;
+  }
+
+  .app-shell .collection-section-heading p {
+    display: none;
+  }
+}

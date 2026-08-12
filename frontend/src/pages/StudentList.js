@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import { FaChevronLeft, FaChevronRight, FaSearch } from 'react-icons/fa';
-import { FiPlus } from 'react-icons/fi';
+import { FiEdit3, FiEye, FiMail, FiPlus, FiPrinter } from 'react-icons/fi';
 import WorkspacePageHeader from '../components/WorkspacePageHeader';
 import "./styles_sl.css";
 
@@ -329,6 +329,17 @@ function StudentList() {
     navigate(`/Student/${student.student_id}`);
   };
 
+  const getStudentInitials = (student) =>
+    `${student.first_name?.charAt(0) || ""}${student.last_name?.charAt(0) || ""}`.toUpperCase();
+
+  const formatRecordDate = (value) => {
+    const date = new Date(value);
+    return {
+      date: date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }),
+      time: date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }),
+    };
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
@@ -415,57 +426,37 @@ function StudentList() {
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((student) => (
+            {currentItems.length === 0 ? (
+              <tr><td colSpan="9"><div className="collection-empty"><FiEye /><strong>No students found</strong><span>Try changing the search or filter options.</span></div></td></tr>
+            ) : currentItems.map((student) => {
+              const created = formatRecordDate(student.createdAt);
+              const updated = formatRecordDate(student.updatedAt);
+              const displayName = `${student.last_name}, ${student.first_name} ${student.middle_name ? student.middle_name.charAt(0) + "." : ""} ${student.suffix || ""}`.trim();
+              return (
               <tr key={student.student_id}>
-                <td data-full-text={student.student_id}>{student.student_id}</td>
-                <td data-full-text={`${student.last_name}, ${student.first_name} ${student.middle_name ? student.middle_name.charAt(0) + "." : ""} ${student.suffix || ""}`.trim()}>
-                  {`${student.last_name}, ${student.first_name} ${student.middle_name ? student.middle_name.charAt(0) + "." : ""} ${student.suffix || ""}`.trim()}
+                <td data-full-text={student.student_id}><span className="student-lrn">{student.student_id}</span></td>
+                <td data-full-text={displayName}>
+                  <div className="student-identity"><span className="student-avatar">{getStudentInitials(student)}</span><div><strong>{displayName}</strong><small>Student record</small></div></div>
                 </td>
-                <td data-full-text={student.sex}>{student.sex}</td>
-                <td data-full-text={student.contact_num}>{student.contact_num}</td>
-                <td data-full-text={student.email}>{student.email}</td>
+                <td data-full-text={student.sex}><span className={`gender-chip ${student.sex?.toLowerCase()}`}>{student.sex}</span></td>
+                <td data-full-text={student.contact_num}><span className="muted-instance-text">{student.contact_num || "—"}</span></td>
+                <td data-full-text={student.email}><span className="email-instance"><FiMail /><span>{student.email || "No email"}</span></span></td>
                 <td>
                   <span className={`status-badge status-${student.status.toLowerCase()}`}>
                     {student.status}
                   </span>
                 </td>
-                <td data-full-text={new Date(student.createdAt).toLocaleString(undefined, {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "2-digit"
-                })}>
-                  {new Date(student.createdAt).toLocaleString(undefined, {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit"
-                  })}
-                </td>
-                <td data-full-text={new Date(student.updatedAt).toLocaleString(undefined, {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "2-digit"
-                })}>
-                  {new Date(student.updatedAt).toLocaleString(undefined, {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit"
-                  })}
-                </td>
+                <td data-full-text={`${created.date} ${created.time}`}><span className="record-date"><strong>{created.date}</strong><small>{created.time}</small></span></td>
+                <td data-full-text={`${updated.date} ${updated.time}`}><span className="record-date"><strong>{updated.date}</strong><small>{updated.time}</small></span></td>
                 <td>
-                  <button className="view-button" onClick={() => handleView(student)}>View</button>
-                  <button className="edit-student-button" onClick={() => handleEdit(student)}>Edit</button>
-                  <button className="papel-button" onClick={() => handlePrint(student)}>Print</button>
+                  <div className="instance-actions">
+                    <button className="instance-action view" onClick={() => handleView(student)} title="View student" aria-label={`View ${displayName}`}><FiEye /></button>
+                    <button className="instance-action edit" onClick={() => handleEdit(student)} title="Edit student" aria-label={`Edit ${displayName}`}><FiEdit3 /></button>
+                    <button className="instance-action print" onClick={() => handlePrint(student)} title="Print record" aria-label={`Print ${displayName}`}><FiPrinter /></button>
+                  </div>
                 </td>
               </tr>
-            ))}
+            );})}
           </tbody>
         </table>
       </div>

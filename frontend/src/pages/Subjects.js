@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { useAuth } from "../context/AuthContext";
 import WorkspacePageHeader from "../components/WorkspacePageHeader";
 import { useConfirmation } from "../context/ConfirmationContext";
+import { FiBookOpen, FiCheck, FiChevronRight, FiPlus, FiX } from "react-icons/fi";
 
 function Subjects() {
   const navigate = useNavigate();
@@ -328,22 +329,24 @@ function Subjects() {
       {/* Display all strands */}
       <div className="listOfStrands">
         {allStrands.length === 0 ? (
-          <p>No strands found.</p>
+          <div className="collection-empty curriculum-empty"><FiBookOpen /><strong>No strands available</strong><span>Add strands to a department before building its curriculum.</span></div>
         ) : (
           allStrands.map((strand) => (
-            <div
+            <article
               key={strand.strand_id}
-              className={`strand ${selectedStrand === strand.strand_id ? 'active' : ''}`}
+              className={`strand curriculum-strand-instance ${selectedStrand === strand.strand_id ? 'active' : ''}`}
               onClick={() => {
                 setSelectedStrand(strand.strand_id);
                 fetchCurriculum(strand.strand_id);
               }}
             >
+              <div className="curriculum-strand-icon"><FiBookOpen /></div>
               <div className="strand-content">
                 <h3 className="strandName">{strand.strand_name}</h3>
                 <p className="strandDescription">{strand.strand_description}</p>
               </div>
-            </div>
+              <span className="curriculum-strand-arrow">{selectedStrand === strand.strand_id ? <FiCheck /> : <FiChevronRight />}</span>
+            </article>
           ))
         )}
       </div>
@@ -375,8 +378,12 @@ function Subjects() {
                 {Object.keys(curriculum).map(grade => 
                   Object.keys(curriculum[grade]).map(semester => (
                     <td key={`${grade}-${semester}`}>
-                      {curriculum[grade][semester].core.map(subject => (
+                      {curriculum[grade][semester].core.length === 0 && (
+                        <div className="subject-empty-slot">No core subjects yet</div>
+                      )}
+                      {curriculum[grade][semester].core.map((subject, subjectIndex) => (
                         <div key={subject.curriculum_id} className="subject-item">
+                          <span className="subject-sequence">{String(subjectIndex + 1).padStart(2, '0')}</span>
                           <div>
                             <strong>{subject.subject_name}</strong>
                             <div className="subject-description">{subject.subject_description}</div>
@@ -384,8 +391,10 @@ function Subjects() {
                           <button 
                             className="remove-button"
                             onClick={() => handleDeleteSubjectCurriculum(subject.curriculum_id)}
+                            title="Remove subject"
+                            aria-label={`Remove ${subject.subject_name}`}
                           >
-                            ×
+                            <FiX />
                           </button>
                         </div>
                       ))}
@@ -393,7 +402,7 @@ function Subjects() {
                         className="add-button"
                         onClick={() => handleOpenAddModal(grade, semester, 'core')}
                       >
-                        + Add Core Subject
+                        <FiPlus /> Add core subject
                       </button>
                     </td>
                   ))
@@ -408,8 +417,12 @@ function Subjects() {
                 {Object.keys(curriculum).map(grade => 
                   Object.keys(curriculum[grade]).map(semester => (
                     <td key={`${grade}-${semester}`}>
-                      {curriculum[grade][semester].specialized.map(subject => (
-                        <div key={subject.curriculum_id} className="subject-item">
+                      {curriculum[grade][semester].specialized.length === 0 && (
+                        <div className="subject-empty-slot">No specialized subjects yet</div>
+                      )}
+                      {curriculum[grade][semester].specialized.map((subject, subjectIndex) => (
+                        <div key={subject.curriculum_id} className="subject-item specialized-subject">
+                          <span className="subject-sequence">{String(subjectIndex + 1).padStart(2, '0')}</span>
                           <div>
                             <strong>{subject.subject_name}</strong>
                             <div className="subject-description">{subject.subject_description}</div>
@@ -417,8 +430,10 @@ function Subjects() {
                           <button 
                             className="remove-button"
                             onClick={() => handleDeleteSubjectCurriculum(subject.curriculum_id)}
+                            title="Remove subject"
+                            aria-label={`Remove ${subject.subject_name}`}
                           >
-                            ×
+                            <FiX />
                           </button>
                         </div>
                       ))}
@@ -426,7 +441,7 @@ function Subjects() {
                         className="add-button"
                         onClick={() => handleOpenAddModal(grade, semester, 'specialized')}
                       >
-                        + Add Specialized Subject
+                        <FiPlus /> Add specialized subject
                       </button>
                     </td>
                   ))

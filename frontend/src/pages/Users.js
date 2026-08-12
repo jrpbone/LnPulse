@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Users.css";
-import { FiPlus } from "react-icons/fi";
+import { FiEdit3, FiPlus, FiTrash2, FiUserCheck, FiUsers } from "react-icons/fi";
 import WorkspacePageHeader from "../components/WorkspacePageHeader";
 import ConfirmationModal from "../components/ConfirmationModal";
 
@@ -144,6 +144,12 @@ const Users = () => {
     return '';
   };
 
+  const getFullName = (user) =>
+    [user.firstname, user.middlename, user.lastname].filter(Boolean).join(' ');
+
+  const getUserInitials = (user) =>
+    `${user.firstname?.charAt(0) || ''}${user.lastname?.charAt(0) || ''}`.toUpperCase();
+
   const departmentUsers = users.filter(user => user.type === 'department_user');
   const sectionUsers = users.filter(user => user.type === 'section_user');
 
@@ -210,7 +216,10 @@ const Users = () => {
       {/* Only show Department Users table for admin users */}
       {!privileges?.departmentId && (
         <div className="table-container">
-          <h2>Department Heads</h2>
+          <div className="collection-section-heading">
+            <div className="collection-section-title"><span className="collection-section-icon"><FiUsers /></span><div><h2>Department Heads</h2><p>Manage department-level access and assignments</p></div></div>
+            <span className="collection-count">{departmentUsers.length}</span>
+          </div>
           <div className="table-wrapper">
             <table className="table">
               <thead className="table-header">
@@ -224,33 +233,38 @@ const Users = () => {
               <tbody>
                 {departmentUsers.length === 0 ? (
                   <tr>
-                    <td colSpan="4" className="empty-message">
-                      No department users found
+                      <td colSpan="4" className="empty-message">
+                        <div className="table-empty-state"><FiUsers /><strong>No department heads yet</strong><span>New department heads will appear here.</span></div>
                     </td>
                   </tr>
                 ) : (
                   departmentUsers.map((user) => (
                     <tr key={user.id}>
-                      <td className="text-center">
-                        <div className="user-name">
-                          {user.firstname} {user.middlename} {user.lastname}
+                      <td>
+                        <div className="user-identity">
+                          <span className="user-avatar">{getUserInitials(user)}</span>
+                          <span><strong>{getFullName(user)}</strong><small>Department head</small></span>
                         </div>
                       </td>
-                      <td className="text-center">{user.username}</td>
-                      <td className="text-center">{getDepartmentName(user)}</td>
+                      <td><span className="username-pill">@{user.username}</span></td>
+                      <td><span className="assignment-chip department">{getDepartmentName(user)}</span></td>
                       <td className="text-center">
-                        <div className="action-buttons">
+                        <div className="instance-actions">
                           <Link
                             to={`/Users/EditUser/${user.id}`}
-                            className="edit-button"
+                            className="instance-action edit"
+                            title="Edit user"
+                            aria-label={`Edit ${getFullName(user)}`}
                           >
-                            Edit
+                            <FiEdit3 />
                           </Link>
                           <button
                             onClick={() => handleDelete(user.id)}
-                            className="delete-button"
+                            className="instance-action delete"
+                            title="Delete user"
+                            aria-label={`Delete ${getFullName(user)}`}
                           >
-                            Delete
+                            <FiTrash2 />
                           </button>
                         </div>
                       </td>
@@ -265,7 +279,10 @@ const Users = () => {
 
       {/* Section Users Table */}
       <div className="table-container">
-        <h2>Advisers</h2>
+        <div className="collection-section-heading">
+          <div className="collection-section-title"><span className="collection-section-icon adviser"><FiUserCheck /></span><div><h2>Advisers</h2><p>Review section advisers and their assigned classes</p></div></div>
+          <span className="collection-count">{sectionUsers.length}</span>
+        </div>
         <div className="table-wrapper">
           <table className="table">
             <thead className="table-header">
@@ -281,33 +298,38 @@ const Users = () => {
               {sectionUsers.length === 0 ? (
                 <tr>
                   <td colSpan="5" className="empty-message">
-                    No section users found
+                    <div className="table-empty-state"><FiUserCheck /><strong>No advisers yet</strong><span>Assigned section advisers will appear here.</span></div>
                   </td>
                 </tr>
               ) : (
                 sectionUsers.map((user) => (
                   <tr key={user.id}>
-                    <td className="text-center">
-                      <div className="user-name">
-                        {user.firstname} {user.middlename} {user.lastname}
+                    <td>
+                      <div className="user-identity">
+                        <span className="user-avatar adviser">{getUserInitials(user)}</span>
+                        <span><strong>{getFullName(user)}</strong><small>Section adviser</small></span>
                       </div>
                     </td>
-                    <td className="text-center">{user.username}</td>
-                    <td className="text-center">{getSectionInfo(user)}</td>
-                    <td className="text-center">{getDepartmentName(user)}</td>
+                    <td><span className="username-pill">@{user.username}</span></td>
+                    <td><span className="assignment-chip section">{getSectionInfo(user) || 'Unassigned'}</span></td>
+                    <td><span className="assignment-chip department">{getDepartmentName(user)}</span></td>
                     <td className="text-center">
-                      <div className="action-buttons">
+                      <div className="instance-actions">
                         <Link
                           to={`/Users/EditUser/${user.id}`}
-                          className="edit-button"
+                          className="instance-action edit"
+                          title="Edit user"
+                          aria-label={`Edit ${getFullName(user)}`}
                         >
-                          Edit
+                          <FiEdit3 />
                         </Link>
                         <button
                           onClick={() => handleDelete(user.id)}
-                          className="delete-button"
+                          className="instance-action delete"
+                          title="Delete user"
+                          aria-label={`Delete ${getFullName(user)}`}
                         >
-                          Delete
+                          <FiTrash2 />
                         </button>
                       </div>
                     </td>
