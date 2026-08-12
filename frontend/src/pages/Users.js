@@ -221,7 +221,7 @@ const Users = () => {
             <span className="collection-count">{departmentUsers.length}</span>
           </div>
           <div className="table-wrapper">
-            <table className="table">
+            <table className="table users-data-table department-heads-table">
               <thead className="table-header">
                 <tr>
                   <th className="text-center">Name</th>
@@ -284,7 +284,7 @@ const Users = () => {
           <span className="collection-count">{sectionUsers.length}</span>
         </div>
         <div className="table-wrapper">
-          <table className="table">
+          <table className="table users-data-table advisers-table">
             <thead className="table-header">
               <tr>
                 <th className="text-center">Name</th>

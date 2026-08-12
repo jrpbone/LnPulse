@@ -251,10 +251,11 @@
 }
 
 .app-shell .student-academic-table {
+  width: 100%;
   min-width: 1280px;
   margin: 0;
   border: 0;
-  table-layout: auto;
+  table-layout: fixed;
   font-size: 0.73rem;
 }
 
@@ -264,12 +265,40 @@
 
 .app-shell .student-academic-table th,
 .app-shell .student-academic-table td {
+  box-sizing: border-box;
   padding: 13px 12px;
   border-bottom: 1px solid #edf2f7;
   color: #475569;
   text-align: left;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
+.app-shell .student-academic-table th:nth-child(1),
+.app-shell .student-academic-table td:nth-child(1),
+.app-shell .student-academic-table th:nth-child(2),
+.app-shell .student-academic-table td:nth-child(2) { width: 9%; }
+.app-shell .student-academic-table th:nth-child(3),
+.app-shell .student-academic-table td:nth-child(3) { width: 12%; }
+.app-shell .student-academic-table th:nth-child(4),
+.app-shell .student-academic-table td:nth-child(4) { width: 11%; }
+.app-shell .student-academic-table th:nth-child(5),
+.app-shell .student-academic-table td:nth-child(5) { width: 6%; }
+.app-shell .student-academic-table th:nth-child(6),
+.app-shell .student-academic-table td:nth-child(6) { width: 7%; }
+.app-shell .student-academic-table th:nth-child(7),
+.app-shell .student-academic-table td:nth-child(7) { width: 8%; }
+.app-shell .student-academic-table th:nth-child(8),
+.app-shell .student-academic-table td:nth-child(8) { width: 8%; }
+.app-shell .student-academic-table th:nth-child(9),
+.app-shell .student-academic-table td:nth-child(9) { width: 7%; }
+.app-shell .student-academic-table th:nth-child(10),
+.app-shell .student-academic-table td:nth-child(10) { width: 7%; }
+.app-shell .student-academic-table th:nth-child(11),
+.app-shell .student-academic-table td:nth-child(11) { width: 6%; }
+.app-shell .student-academic-table th:nth-child(12),
+.app-shell .student-academic-table td:nth-child(12) { width: 10%; text-align: center; overflow: visible; }
 
 .app-shell .student-academic-table th {
   color: #64748b;

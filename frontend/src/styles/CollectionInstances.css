@@ -87,7 +87,49 @@
 }
 
 .app-shell .student-panel table {
+  width: 100%;
   min-width: 1160px;
+  margin: 0;
+  table-layout: fixed;
+}
+
+/* Legacy widths totaled 110%, which pushed later cells progressively right. */
+.app-shell .student-panel .student-table th:nth-child(1),
+.app-shell .student-panel .student-table td:nth-child(1) { width: 10%; }
+.app-shell .student-panel .student-table th:nth-child(2),
+.app-shell .student-panel .student-table td:nth-child(2) { width: 18%; }
+.app-shell .student-panel .student-table th:nth-child(3),
+.app-shell .student-panel .student-table td:nth-child(3) { width: 7%; }
+.app-shell .student-panel .student-table th:nth-child(4),
+.app-shell .student-panel .student-table td:nth-child(4) { width: 10%; }
+.app-shell .student-panel .student-table th:nth-child(5),
+.app-shell .student-panel .student-table td:nth-child(5) { width: 15%; }
+.app-shell .student-panel .student-table th:nth-child(6),
+.app-shell .student-panel .student-table td:nth-child(6) { width: 8%; }
+.app-shell .student-panel .student-table th:nth-child(7),
+.app-shell .student-panel .student-table td:nth-child(7) { width: 10%; }
+.app-shell .student-panel .student-table th:nth-child(8),
+.app-shell .student-panel .student-table td:nth-child(8) { width: 10%; }
+.app-shell .student-panel .student-table th:nth-child(9),
+.app-shell .student-panel .student-table td:nth-child(9) { width: 12%; }
+
+.app-shell .student-panel .student-table th,
+.app-shell .student-panel .student-table td {
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.app-shell .student-panel .student-table th:nth-child(2) {
+  padding-left: 65px;
+}
+
+.app-shell .student-panel .student-table th:last-child,
+.app-shell .student-panel .student-table td:last-child {
+  text-align: center;
+}
+
+.app-shell .student-panel .student-table td:hover::after {
+  pointer-events: none;
 }
 
 .app-shell .student-panel tbody tr {
@@ -693,10 +735,31 @@
 }
 
 .app-shell .strand-section-table {
+  width: 100%;
   min-width: 820px;
   margin: 0;
-  table-layout: auto;
+  table-layout: fixed;
   box-shadow: none;
+}
+
+.app-shell .strand-section-table th:nth-child(1),
+.app-shell .strand-section-table td:nth-child(1) { width: 22%; }
+.app-shell .strand-section-table th:nth-child(2),
+.app-shell .strand-section-table td:nth-child(2) { width: 13%; }
+.app-shell .strand-section-table th:nth-child(3),
+.app-shell .strand-section-table td:nth-child(3) { width: 25%; }
+.app-shell .strand-section-table th:nth-child(4),
+.app-shell .strand-section-table td:nth-child(4) { width: 22%; }
+.app-shell .strand-section-table th:nth-child(5),
+.app-shell .strand-section-table td:nth-child(5) { width: 18%; }
+
+.app-shell .strand-section-table th:nth-child(3) {
+  padding-left: 64px;
+}
+
+.app-shell .strand-section-table th:last-child,
+.app-shell .strand-section-table td:last-child {
+  text-align: center;
 }
 
 .app-shell .strand-section-table th,
@@ -1072,27 +1135,73 @@
   font-weight: 800;
 }
 
-.app-shell .users-page .table {
-  min-width: 720px;
+.app-shell .users-page .users-data-table {
+  width: 100%;
+  min-width: 760px;
+  margin: 0;
+  border-spacing: 0;
+  table-layout: fixed;
 }
 
-.app-shell .users-page .table th {
+.app-shell .users-page .users-data-table th,
+.app-shell .users-page .users-data-table td {
+  box-sizing: border-box;
+  padding-right: 16px;
+  padding-left: 16px;
   text-align: left;
-}
-
-.app-shell .users-page .table th:last-child,
-.app-shell .users-page .table td:last-child {
-  text-align: center;
-}
-
-.app-shell .users-page .table td {
-  padding-top: 14px;
-  padding-bottom: 14px;
   vertical-align: middle;
 }
 
-.app-shell .users-page .table tbody tr:hover {
+.app-shell .users-page .department-heads-table th:nth-child(1),
+.app-shell .users-page .department-heads-table td:nth-child(1) { width: 32%; }
+.app-shell .users-page .department-heads-table th:nth-child(2),
+.app-shell .users-page .department-heads-table td:nth-child(2) { width: 22%; }
+.app-shell .users-page .department-heads-table th:nth-child(3),
+.app-shell .users-page .department-heads-table td:nth-child(3) { width: 30%; }
+.app-shell .users-page .department-heads-table th:nth-child(4),
+.app-shell .users-page .department-heads-table td:nth-child(4) { width: 16%; }
+
+.app-shell .users-page .advisers-table th:nth-child(1),
+.app-shell .users-page .advisers-table td:nth-child(1) { width: 27%; }
+.app-shell .users-page .advisers-table th:nth-child(2),
+.app-shell .users-page .advisers-table td:nth-child(2) { width: 18%; }
+.app-shell .users-page .advisers-table th:nth-child(3),
+.app-shell .users-page .advisers-table td:nth-child(3) { width: 17%; }
+.app-shell .users-page .advisers-table th:nth-child(4),
+.app-shell .users-page .advisers-table td:nth-child(4) { width: 24%; }
+.app-shell .users-page .advisers-table th:nth-child(5),
+.app-shell .users-page .advisers-table td:nth-child(5) { width: 14%; }
+
+.app-shell .users-page .users-data-table th:first-child {
+  padding-left: 65px;
+}
+
+.app-shell .users-page .users-data-table th:last-child,
+.app-shell .users-page .users-data-table td:last-child {
+  text-align: center;
+}
+
+.app-shell .users-page .users-data-table td {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.app-shell .users-page .users-data-table tbody tr:hover {
   background: #f8fbff;
+}
+
+.app-shell .users-page .users-data-table td > .username-pill,
+.app-shell .users-page .users-data-table td > .assignment-chip {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-shell .users-page .users-data-table .user-identity strong,
+.app-shell .users-page .users-data-table .user-identity small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .app-shell .username-pill {
