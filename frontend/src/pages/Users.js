@@ -3,6 +3,9 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Users.css";
+import { FiPlus } from "react-icons/fi";
+import WorkspacePageHeader from "../components/WorkspacePageHeader";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -13,7 +16,7 @@ const Users = () => {
   const [success, setSuccess] = useState("");
   const [sectionsWithoutAdviser, setSectionsWithoutAdviser] = useState([]);
   const [departmentsWithoutHead, setDepartmentsWithoutHead] = useState([]);
-  const { privileges, user } = useAuth();
+  const { privileges } = useAuth();
 
   useEffect(() => {
     fetchUsers();
@@ -152,32 +155,32 @@ const Users = () => {
   );
 
   return (
-    <div className="container">
+    <div className="container workspace-page users-page">
+      <WorkspacePageHeader
+        eyebrow="Access management"
+        title="Users"
+        count={users.length}
+        description="Manage department heads, advisers, and their account access."
+        actions={!privileges?.departmentId && privileges?.canAddDepartmentUsers ? (
+          <Link to="/Users/CreateUser?type=department" className="workspace-primary-action">
+            <FiPlus aria-hidden="true" />
+            <span>New user</span>
+          </Link>
+        ) : privileges?.canAddAdvisers ? (
+          <Link to="/Users/DUser" className="workspace-primary-action">
+            <FiPlus aria-hidden="true" />
+            <span>New adviser</span>
+          </Link>
+        ) : null}
+      />
       {/* Warning Message for Departments without Head */}
       {!privileges?.departmentId && departmentsWithoutHead.length > 0 && (
-        <div className="warning-message" style={{
-          backgroundColor: '#f8d7da',
-          color: '#721c24',
-          padding: '12px 20px',
-          borderRadius: '4px',
-          marginBottom: '10px',
-          border: '1px solid #f5c6cb',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
+        <div className="warning-message danger">
           <span>
             <strong>Warning:</strong> {departmentsWithoutHead.length} department{departmentsWithoutHead.length !== 1 ? 's' : ''} without an assigned department head
           </span>
           {privileges?.canAddDepartmentUsers && (
-            <Link to="/Users/CreateUser?type=department" className="warning-action-button" style={{
-              backgroundColor: '#721c24',
-              color: 'white',
-              padding: '6px 12px',
-              borderRadius: '4px',
-              textDecoration: 'none',
-              fontSize: '14px'
-            }}>
+            <Link to="/Users/CreateUser?type=department" className="warning-action-button">
               Add Department Head
             </Link>
           )}
@@ -186,29 +189,12 @@ const Users = () => {
 
       {/* Warning Message for Sections without Adviser */}
       {sectionsWithoutAdviser.length > 0 && (
-        <div className="warning-message" style={{
-          backgroundColor: '#fff3cd',
-          color: '#856404',
-          padding: '12px 20px',
-          borderRadius: '4px',
-          marginBottom: '20px',
-          border: '1px solid #ffeeba',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
+        <div className="warning-message">
           <span>
             <strong>Warning:</strong> {sectionsWithoutAdviser.length} section{sectionsWithoutAdviser.length !== 1 ? 's' : ''} without an assigned adviser
           </span>
           {privileges?.canAddAdvisers && (
-            <Link to="/Users/CreateUser?type=adviser" className="warning-action-button" style={{
-              backgroundColor: '#856404',
-              color: 'white',
-              padding: '6px 12px',
-              borderRadius: '4px',
-              textDecoration: 'none',
-              fontSize: '14px'
-            }}>
+            <Link to="/Users/CreateUser?type=adviser" className="warning-action-button">
               Add Adviser
             </Link>
           )}
@@ -220,19 +206,6 @@ const Users = () => {
           {success}
         </div>
       )}
-
-      <div className="header-with-button">
-        <h1>User Management</h1>
-        {!privileges?.departmentId && privileges?.canAddDepartmentUsers ? (
-          <Link to="/Users/CreateUser?type=department" className="add-user-button">
-            Add User
-          </Link>
-        ) : privileges?.canAddAdvisers && (
-          <Link to="/Users/DUser" className="add-user-button">
-            Add Adviser
-          </Link>
-        )}
-      </div>
 
       {/* Only show Department Users table for admin users */}
       {!privileges?.departmentId && (
@@ -346,23 +319,9 @@ const Users = () => {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
-      {showDeleteModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Confirm Deletion</h3>
-            <p>Are you sure you want to delete this user? This action cannot be undone.</p>
-            <div className="button-group">
-              <button className="submit-button" onClick={confirmDelete}>
-                Delete
-              </button>
-              <button className="cancel-button" onClick={cancelDelete}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationModal isOpen={showDeleteModal} title="Delete this user?" message="The user will immediately lose access to LN Pulse." confirmLabel="Delete user" variant="danger" onConfirm={confirmDelete} onCancel={cancelDelete}>
+        <p className="confirmation-warning">This action cannot be undone.</p>
+      </ConfirmationModal>
     </div>
   );
 };

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Formik, Form, Field, ErrorMessage, useFormikContext } from "formik";
+import { Formik, Form, Field, useFormikContext } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FiArrowLeft, FiCheck, FiInfo } from "react-icons/fi";
+import WorkspacePageHeader from "../components/WorkspacePageHeader";
 import "./styles.css";
+import "./NewStudent.css";
 
 function CreateStudent() {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -300,10 +303,23 @@ function CreateStudent() {
   };
 
   return (
-    <div>
-      <div className="create_main">
+    <div className="create_main workspace-page new-student-page">
+        <WorkspacePageHeader
+          eyebrow="Student management"
+          title="New student"
+          description="Create the learner's personal record. Academic enrollment details follow in the next step."
+          actions={(
+            <button type="button" className="workspace-secondary-action" onClick={() => navigate("/StudentList")}>
+              <FiArrowLeft aria-hidden="true" />
+              <span>Back to students</span>
+            </button>
+          )}
+        />
         {showSuccessMessage && (
-          <div className="success-message">Student successfully added!</div>
+          <div className="new-student-notice success"><FiCheck /> Student successfully added. Preparing academic information…</div>
+        )}
+        {showErrorModal && (
+          <div className="new-student-notice error" role="alert"><FiInfo /> {errorMessage}</div>
         )}
         <div className="createStudentPage">
           <Formik
@@ -311,15 +327,17 @@ function CreateStudent() {
             validationSchema={validationSchema}
             onSubmit={onSubmit}
           >
-            <Form>
+            <Form className="student-record-form">
               {/* Auto-updates age and BMI */}
               <AutoCalculateFields />
 
-              <h2 className="title">New Student</h2>
-
-              <div className="form-section">
+              <div className="form-section identity-section">
+                <div className="section-heading">
+                  <div><span>01</span></div>
+                  <div><h3>Student identity</h3><p>Enter the learner's unique DepEd reference number.</p></div>
+                </div>
                 <div className="lrn_div">
-                  <label className="label">Learner's Reference Number:</label>
+                  <label className="label">Learner's Reference Number <span className="required-mark">*</span></label>
                   <Field
                     name="studentID"
                     placeholder="XXX - XXX - XXX - XXX"
@@ -330,7 +348,7 @@ function CreateStudent() {
               </div>
 
               <div className="form-section">
-                <h3 className="section-title">Personal Information</h3>
+                <div className="section-heading"><div><span>02</span></div><div><h3>Personal information</h3><p>Record the learner's complete legal name.</p></div></div>
                 <div className="name_div">
                   <div className="field-group">
                     <label className="l-label">Last Name:</label>
@@ -380,7 +398,7 @@ function CreateStudent() {
               </div>
 
               <div className="form-section">
-                <h3 className="section-title">Birth Information</h3>
+                <div className="section-heading"><div><span>03</span></div><div><h3>Birth information</h3><p>Used to verify age and identity.</p></div></div>
                 <div className="birth_div">
                   <div className="field-group">
                     <label className="label">Date of Birth:</label>
@@ -434,7 +452,7 @@ function CreateStudent() {
               </div>
 
               <div className="form-section">
-                <h3 className="section-title">Contact Information</h3>
+                <div className="section-heading"><div><span>04</span></div><div><h3>Contact information</h3><p>Primary communication details for this learner.</p></div></div>
                 <div className="contact_div">
                   <div className="field-group">
                     <label className="label">Contact Number:</label>
@@ -459,7 +477,7 @@ function CreateStudent() {
               </div>
 
               <div className="form-section">
-                <h3 className="section-title">Personal Details</h3>
+                <div className="section-heading"><div><span>05</span></div><div><h3>Personal details</h3><p>Additional demographic and health information.</p></div></div>
                 <div className="place_div">
                   <div className="field-group">
                     <label className="label">Religion:</label>
@@ -516,7 +534,7 @@ function CreateStudent() {
               </div>
 
               <div className="form-section">
-                <h3 className="section-title">Current Address</h3>
+                <div className="section-heading"><div><span>06</span></div><div><h3>Current address</h3><p>Where the learner presently resides.</p></div></div>
                 <div className="current_div">
                   <div className="field-group">
                     <label className="clabel">House Number:</label>
@@ -560,7 +578,7 @@ function CreateStudent() {
               </div>
 
               <div className="form-section">
-                <h3 className="section-title">Permanent Address</h3>
+                <div className="section-heading"><div><span>07</span></div><div><h3>Permanent address</h3><p>The learner's permanent home address.</p></div></div>
                 <div className="current_div">
                   <div className="field-group">
                     <label className="clabel">House Number:</label>
@@ -604,7 +622,7 @@ function CreateStudent() {
               </div>
 
               <div className="form-section">
-                <h3 className="section-title">Parent/Guardian Information</h3>
+                <div className="section-heading"><div><span>08</span></div><div><h3>Parent or guardian</h3><p>Emergency and household contact information.</p></div></div>
                 <div className="parent_div">
                   <div className="field-group">
                     <label className="clabel">Guardian First Name:</label>
@@ -648,13 +666,16 @@ function CreateStudent() {
                 </div>
               </div>
 
-              <button type="submit" className="submit-btn">
-                Save
-              </button>
+              <div className="student-form-actions">
+                <div><strong>Ready to continue?</strong><span>Academic enrollment will be added after this record is saved.</span></div>
+                <div>
+                  <button type="button" className="workspace-secondary-action" onClick={() => navigate("/StudentList")}>Cancel</button>
+                  <button type="submit" className="submit-btn"><FiCheck aria-hidden="true" /> Save and continue</button>
+                </div>
+              </div>
             </Form>
           </Formik>
         </div>
-      </div>
     </div>
   );
 }

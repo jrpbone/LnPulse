@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import WorkspacePageHeader from "../components/WorkspacePageHeader";
 import {
   FiBookOpen,
   FiCalendar,
@@ -105,18 +106,18 @@ function Dashboard() {
   ];
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div>
-          <p className="eyebrow">Overview</p>
-          <h1>Welcome back, {firstName}</h1>
-          <p className="header-subtitle">Here’s what’s happening across LNHS Senior High today.</p>
-        </div>
-        <div className="date-chip">
+    <div className="dashboard-container workspace-page">
+      <WorkspacePageHeader
+        eyebrow="Overview"
+        title={`Welcome back, ${firstName}`}
+        description="Here’s what’s happening across LNHS Senior High today."
+        actions={(
+          <div className="date-chip">
           <FiCalendar aria-hidden="true" />
           <span>{today}</span>
-        </div>
-      </header>
+          </div>
+        )}
+      />
 
       <section className="dashboard-hero" aria-label="Academic year summary">
         <div className="hero-copy">

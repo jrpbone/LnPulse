@@ -15,7 +15,6 @@ import {
   FiLogOut,
   FiMenu,
   FiUsers,
-  FiUserPlus,
   FiX,
 } from "react-icons/fi";
 import Dashboard from "./pages/Dashboard";
@@ -38,13 +37,16 @@ import SectionStudents from './pages/SectionStudents';
 import Reports from './pages/Reports';
 import DUser from "./pages/DUser";
 import AcademicInfo from "./pages/AcademicInfo";
+import { ConfirmationProvider } from "./context/ConfirmationContext";
 
 function AppWrapper() {
   return (
     <AuthProvider>
-      <Router>
-        <App />
-      </Router>
+      <ConfirmationProvider>
+        <Router>
+          <App />
+        </Router>
+      </ConfirmationProvider>
     </AuthProvider>
   );
 }
@@ -127,8 +129,6 @@ function App() {
               <p className="nav-label">Workspace</p>
               {navLink("/dashboard", "Dashboard", FiGrid)}
 
-              {privileges?.canManageStudents && !privileges?.sectionId &&
-                navLink("/CreateStudent", "New student", FiUserPlus)}
               {privileges?.canManageStudents && privileges?.canViewAllStudents &&
                 navLink("/StudentList", "Students", FiUsers)}
               {privileges?.canViewDepartments &&
@@ -174,7 +174,7 @@ function App() {
 
           {/* Student management routes */}
           <Route
-            path="/CreateStudent"
+            path="/StudentList/new"
             element={
               <ProtectedRoute
                 requiredPrivileges={['canManageStudents', 'canViewAllStudents']}

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import { FaChevronLeft, FaChevronRight, FaSearch } from 'react-icons/fa';
+import { FiPlus } from 'react-icons/fi';
+import WorkspacePageHeader from '../components/WorkspacePageHeader';
 import "./styles_sl.css";
 
 function StudentList() {
@@ -332,13 +333,21 @@ function StudentList() {
   if (error) return <div className="error-message">{error}</div>;
 
   return (
-    <div className="student-panel">
+    <div className="student-panel workspace-page">
       <div className="panel-header">
-        <h1 className="title">
-          Students
-          <span className="student-count">{filteredStudents.length}</span>
-        </h1>
-        <div className="header-controls">
+        <WorkspacePageHeader
+          eyebrow="Student management"
+          title="Students"
+          count={filteredStudents.length}
+          description="Search, review, and manage student records."
+          actions={privileges?.canManageStudents && !privileges?.sectionId ? (
+            <Link to="/StudentList/new" className="workspace-primary-action">
+              <FiPlus aria-hidden="true" />
+              <span>New student</span>
+            </Link>
+          ) : null}
+        />
+        <div className="header-controls workspace-toolbar">
           <div className="search-container">
             <div className="search-bar">
               <FaSearch className="search-icon" />
@@ -387,13 +396,10 @@ function StudentList() {
               <option value={100}>100</option>
             </select>
           </div>
-          <Link to="/CreateStudent" className="add">
-            + Add a student
-          </Link>
         </div>
       </div>
 
-      <div className="table-wrapper">
+      <div className="table-wrapper workspace-surface">
         <table className="student-table">
           <thead>
             <tr>

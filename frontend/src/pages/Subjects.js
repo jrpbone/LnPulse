@@ -4,10 +4,13 @@ import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../context/AuthContext";
+import WorkspacePageHeader from "../components/WorkspacePageHeader";
+import { useConfirmation } from "../context/ConfirmationContext";
 
 function Subjects() {
   const navigate = useNavigate();
   const { privileges } = useAuth();
+  const confirmAction = useConfirmation();
   const [allStrands, setAllStrands] = useState([]);
   const [allSubjects, setAllSubjects] = useState([]);
   const [subjects, setSubjects] = useState([]);
@@ -109,8 +112,9 @@ function Subjects() {
     subject_description: Yup.string().required("Subject description is required")
   });
 
-  const handleDeleteSubject = (subjectId) => {
-    if (window.confirm("Are you sure you want to delete this subject?")) {
+  const handleDeleteSubject = async (subjectId) => {
+    const confirmed = await confirmAction({ title: "Delete this subject?", message: "The subject will be permanently removed from the subject catalog.", confirmLabel: "Delete subject", variant: "danger" });
+    if (confirmed) {
       axios
         .delete(`http://localhost:3001/subjects/${subjectId}`)
         .then(() => {
@@ -292,7 +296,8 @@ function Subjects() {
 
   // Handle subject deletion
   const handleDeleteSubjectCurriculum = async (curriculumId) => {
-    if (window.confirm("Are you sure you want to delete this subject?")) {
+    const confirmed = await confirmAction({ title: "Remove this curriculum subject?", message: "The subject will be removed from the selected strand and academic period.", confirmLabel: "Remove subject", variant: "danger" });
+    if (confirmed) {
       try {
         await axios.delete(`http://localhost:3001/curriculum/${curriculumId}`);
         await fetchCurriculum(selectedStrand);
@@ -306,18 +311,19 @@ function Subjects() {
   };
 
   return (
-    <div className="strand_panel">
+    <div className="strand_panel workspace-page curriculum-workspace">
       {showSuccessMessage && (
         <div className="success-message">
           Operation completed successfully!
         </div>
       )}
       
-      <div className="header_div">
-        <h2 className="title">
-          Strands <span className="strand_count">{allStrands.length}</span>
-        </h2>
-      </div>
+      <WorkspacePageHeader
+        eyebrow="Academic planning"
+        title="Curriculum"
+        count={allStrands.length}
+        description="Select a strand to review and manage its subject curriculum."
+      />
 
       {/* Display all strands */}
       <div className="listOfStrands">

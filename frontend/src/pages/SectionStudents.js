@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import './styles.css';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import Breadcrumbs from '../components/Breadcrumbs';
+import WorkspacePageHeader from '../components/WorkspacePageHeader';
 
 function SectionStudents() {
   const [students, setStudents] = useState([]);
@@ -15,7 +15,7 @@ function SectionStudents() {
   const [gradeLevel, setGradeLevel] = useState('');
   const [showCheckboxes, setShowCheckboxes] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState([]);
-  const { user, privileges } = useAuth();
+  const { privileges } = useAuth();
   const { sectionId } = useParams();
   const [showAcadModal, setShowAcadModal] = useState(false);
   const [selectedAcadInfo, setSelectedAcadInfo] = useState(null);
@@ -282,8 +282,7 @@ function SectionStudents() {
   if (error) return <div className="error-message">{error}</div>;
 
   return (
-    <div className="container">
-      <Breadcrumbs />
+    <div className="container workspace-page section-students-page">
       {/* Error Modal */}
       {showErrorModal && (
         <div className="modal-overlay">
@@ -337,42 +336,25 @@ function SectionStudents() {
           </div>
         </div>
       )}
-      <h1>{sectionName ? `${students[0]?.ACADEMIC_INFO_Ts?.[0]?.gradeLevel || ''} -  ${sectionName} Students` : 'Section Students'}</h1>
-      <div style={{ marginBottom: '20px' }}>
-        {!privileges?.sectionId && (
+      <WorkspacePageHeader
+        eyebrow="Section management"
+        title={sectionName ? `Grade ${gradeLevel} · ${sectionName}` : 'My section'}
+        count={students.length}
+        description="Review section records, academic status, and student progression."
+        actions={!privileges?.sectionId ? (
+          <div className="section-header-actions">
+          {!showCheckboxes ? (
           <button 
             onClick={() => setShowCheckboxes(!showCheckboxes)}
-            style={{
-              backgroundColor: '#28a745',
-              color: 'white',
-              padding: '10px 20px',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}
-            onMouseOver={(e) => e.target.style.backgroundColor = '#218838'}
-            onMouseOut={(e) => e.target.style.backgroundColor = '#28a745'}
+            className="workspace-primary-action"
           >
             Promote Students
           </button>
-        )}
-        {showCheckboxes && (
+          ) : (
           <>
             <button
               onClick={handleSave}
-              style={{
-                backgroundColor: '#007bff',
-                color: 'white',
-                padding: '10px 20px',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                marginLeft: '10px'
-              }}
-              onMouseOver={e => e.target.style.backgroundColor = '#0056b3'}
-              onMouseOut={e => e.target.style.backgroundColor = '#007bff'}
+              className="workspace-primary-action"
             >
               Save
             </button>
@@ -381,24 +363,15 @@ function SectionStudents() {
                 setShowCheckboxes(false);
                 setSelectedStudents([]);
               }}
-              style={{
-                backgroundColor: '#dc3545',
-                color: 'white',
-                padding: '10px 20px',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                marginLeft: '10px'
-              }}
-              onMouseOver={e => e.target.style.backgroundColor = '#c82333'}
-              onMouseOut={e => e.target.style.backgroundColor = '#dc3545'}
+              className="workspace-secondary-action danger"
             >
               Cancel
             </button>
           </>
-        )}
-      </div>
+          )}
+          </div>
+        ) : null}
+      />
       {showAcadModal && (
         <div className="modal-overlay">
           <div className="modal-content" style={{ width: '600px', maxWidth: '95%' }}>
@@ -707,4 +680,4 @@ function SectionStudents() {
   );
 }
 
-export default SectionStudents; 
+export default SectionStudents;

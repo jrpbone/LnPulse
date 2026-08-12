@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { FiArrowLeft, FiCheck, FiKey, FiShield, FiUser } from "react-icons/fi";
+import WorkspacePageHeader from "../components/WorkspacePageHeader";
+import ConfirmationModal from "../components/ConfirmationModal";
 import "./CreateUser.css";
+import "./EditUserModern.css";
 
 function DUser() {
   const navigate = useNavigate();
@@ -15,7 +19,6 @@ function DUser() {
   const departmentId = deptFromQuery || privileges?.departmentId;
 
   const [departments, setDepartments] = useState([]);
-  const [sections, setSections] = useState([]);
   const [filteredSections, setFilteredSections] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -55,7 +58,6 @@ function DUser() {
           section => !sectionsWithAdviser.includes(section.section_id)
         );
 
-        setSections(sectionResponse.data);
         setFilteredSections(availableSections);
         setExistingUsernames(usersResponse.data.map(user => user.username));
       } catch (error) {
@@ -114,7 +116,7 @@ function DUser() {
         username: formData.username.trim()
       };
 
-      const response = await axios.post("http://localhost:3001/users", submitData);
+      await axios.post("http://localhost:3001/users", submitData);
       setSuccess("Adviser created successfully!");
       setShowConfirmModal(false);
       setShowSuccessMessage(true);
@@ -138,17 +140,16 @@ function DUser() {
     setShowConfirmModal(false);
   };
 
+  const selectedSection = filteredSections.find(s => s.section_id === parseInt(formData.section_id));
+  const selectedDepartment = departments.find(d => d.department_id === parseInt(formData.department_id));
+
   return (
-    <div className="create-user-container">
+    <div className="create-user-container workspace-page edit-user-page create-user-page">
       {showSuccessMessage && (
-        <div className="success-message">
-          Operation completed successfully!
-        </div>
+        <div className="edit-user-toast"><FiCheck /> Adviser account created. Returning to users…</div>
       )}
-      
-      <div className="form-header">
-        <h1>Add New Adviser</h1>
-      </div>
+
+      <WorkspacePageHeader eyebrow="Access management" title="New adviser" description="Create an adviser account and assign it to an available section." actions={<button type="button" className="workspace-secondary-action" onClick={() => navigate("/Users")}><FiArrowLeft /> Back to users</button>} />
 
       {error && (
         <div className="error-alert" role="alert">
@@ -162,9 +163,12 @@ function DUser() {
         </div>
       )}
 
-      <form className="create-user-form" onSubmit={handleSubmit}>
+      <form className="create-user-form modern-user-form" onSubmit={handleSubmit}>
+        <section className="user-form-section">
+          <div className="user-section-heading"><span><FiUser /></span><div><h2>Personal identity</h2><p>Enter the adviser's complete legal name.</p></div></div>
+          <div className="user-form-grid three-columns">
         <div className="form-group">
-          <label htmlFor="firstname">First Name *</label>
+          <label htmlFor="firstname">First name <b>*</b></label>
           <input
             type="text"
             id="firstname"
@@ -176,7 +180,7 @@ function DUser() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="middlename">Middle Name *</label>
+          <label htmlFor="middlename">Middle name <b>*</b></label>
           <input
             type="text"
             id="middlename"
@@ -188,7 +192,7 @@ function DUser() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="lastname">Last Name *</label>
+          <label htmlFor="lastname">Last name <b>*</b></label>
           <input
             type="text"
             id="lastname"
@@ -198,9 +202,14 @@ function DUser() {
             required
           />
         </div>
+          </div>
+        </section>
 
+        <section className="user-form-section">
+          <div className="user-section-heading"><span><FiKey /></span><div><h2>Sign-in credentials</h2><p>Create the username and initial password for this adviser.</p></div></div>
+          <div className="user-form-grid two-columns">
         <div className="form-group">
-          <label htmlFor="username">Username *</label>
+          <label htmlFor="username">Username <b>*</b></label>
           <input
             type="text"
             id="username"
@@ -212,9 +221,9 @@ function DUser() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="password">Password *</label>
+          <label htmlFor="password">Temporary password <b>*</b></label>
           <input
-            type="text"
+            type="password"
             id="password"
             name="password"
             value={formData.password}
@@ -222,7 +231,12 @@ function DUser() {
             required
           />
         </div>
+          </div>
+        </section>
 
+        <section className="user-form-section">
+          <div className="user-section-heading"><span><FiShield /></span><div><h2>School assignment</h2><p>Assign this adviser to an available section in the department.</p></div></div>
+          <div className="user-form-grid two-columns">
         <div className="form-group">
           <label>Department</label>
           <input
@@ -230,16 +244,11 @@ function DUser() {
             value={departments.find(d => d.department_id === parseInt(formData.department_id))?.department_name || ""}
             disabled
             className="disabled-input"
-            style={{
-              backgroundColor: '#f5f5f5',
-              color: '#666',
-              cursor: 'not-allowed'
-            }}
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="section_id">Section *</label>
+          <label htmlFor="section_id">Section <b>*</b></label>
           <select
             id="section_id"
             name="section_id"
@@ -255,45 +264,25 @@ function DUser() {
             ))}
           </select>
         </div>
+          </div>
+        </section>
 
-        <div className="form-actions">
-          <button type="submit" className="submit-button">
-            Create Adviser
-          </button>
-          <button
-            type="button"
-            className="cancel-button"
-            onClick={() => navigate("/Users")}
-          >
-            Cancel
-          </button>
+        <div className="form-actions modern-user-actions">
+          <div><strong>Ready to create this adviser?</strong><span>You’ll review the account and section assignment before saving.</span></div>
+          <div><button type="button" className="cancel-button" onClick={() => navigate("/Users")}>Cancel</button><button type="submit" className="submit-button"><FiCheck /> Review account</button></div>
         </div>
       </form>
 
-      {/* Confirmation Modal */}
-      {showConfirmModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Confirm Adviser Creation</h3>
-            <p>Are you sure you want to create a new adviser with the following details?</p>
-            <div className="confirmation-details">
-              <p><strong>Name:</strong> {formData.firstname} {formData.middlename} {formData.lastname}</p>
-              <p><strong>Username:</strong> {formData.username}</p>
-              <p><strong>Section:</strong> {filteredSections.find(s => s.section_id === parseInt(formData.section_id))?.section_name}</p>
-            </div>
-            <div className="button-group">
-              <button className="submit-button" onClick={confirmSubmit}>
-                Confirm
-              </button>
-              <button className="cancel-button" onClick={cancelSubmit}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationModal isOpen={showConfirmModal} title="Create adviser account?" message="Review the account and section assignment before creating access." confirmLabel="Create adviser" cancelLabel="Go back" onConfirm={confirmSubmit} onCancel={cancelSubmit}>
+        <dl className="confirmation-details-list">
+          <div className="confirmation-detail"><dt>Name</dt><dd>{formData.firstname} {formData.middlename} {formData.lastname}</dd></div>
+          <div className="confirmation-detail"><dt>Username</dt><dd>{formData.username}</dd></div>
+          <div className="confirmation-detail"><dt>Department</dt><dd>{selectedDepartment?.department_name}</dd></div>
+          <div className="confirmation-detail"><dt>Section</dt><dd>{selectedSection ? `${selectedSection.grade_level} - ${selectedSection.section_name}` : ""}</dd></div>
+        </dl>
+      </ConfirmationModal>
     </div>
   );
 }
 
-export default DUser; 
+export default DUser;

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../context/AuthContext";
+import { FiArrowLeft, FiCheck, FiKey, FiShield, FiUser } from "react-icons/fi";
+import WorkspacePageHeader from "../components/WorkspacePageHeader";
+import ConfirmationModal from "../components/ConfirmationModal";
 import "./CreateUser.css";
+import "./EditUserModern.css";
 
 function CreateUser() {
   const navigate = useNavigate();
@@ -207,17 +210,21 @@ function CreateUser() {
     setShowConfirmModal(false);
   };
 
+  const selectedDepartment = departments.find(d => d.department_id === parseInt(formData.department_id));
+  const selectedSection = sections.find(s => s.section_id === parseInt(formData.section_id));
+
   return (
-    <div className="create-user-container">
+    <div className="create-user-container workspace-page edit-user-page create-user-page">
       {showSuccessMessage && (
-        <div className="success-message">
-          Operation completed successfully!
-        </div>
+        <div className="edit-user-toast"><FiCheck /> Account created successfully. Returning to users…</div>
       )}
-      
-      <div className="form-header">
-        <h1>{isAdviserCreation ? 'Add New Adviser' : 'Create New User'}</h1>
-      </div>
+
+      <WorkspacePageHeader
+        eyebrow="Access management"
+        title={isAdviserCreation ? "New adviser" : "New user"}
+        description="Create a secure account and assign the appropriate school access."
+        actions={<button type="button" className="workspace-secondary-action" onClick={() => navigate("/Users")}><FiArrowLeft /> Back to users</button>}
+      />
 
       {error && (
         <div className="error-alert" role="alert">
@@ -231,194 +238,53 @@ function CreateUser() {
         </div>
       )}
 
-      <form className="create-user-form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="firstname">First Name *</label>
-          <input
-            type="text"
-            id="firstname"
-            name="firstname"
-            value={formData.firstname}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="middlename">Middle Name *</label>
-          <input
-            type="text"
-            id="middlename"
-            name="middlename"
-            value={formData.middlename}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="lastname">Last Name *</label>
-          <input
-            type="text"
-            id="lastname"
-            name="lastname"
-            value={formData.lastname}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="username">Username *</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="password">Password *</label>
-          <input
-            type="text"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {!isAdviserCreation && (
-          <div className="form-group">
-            <label htmlFor="type">User Type *</label>
-            <select
-              id="type"
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              required
-            >
-              <option value="department_user">Department Head</option>
-              <option value="section_user">Section Adviser</option>
-            </select>
+      <form className="create-user-form modern-user-form" onSubmit={handleSubmit}>
+        <section className="user-form-section">
+          <div className="user-section-heading"><span><FiUser /></span><div><h2>Personal identity</h2><p>Enter the staff member's complete legal name.</p></div></div>
+          <div className="user-form-grid three-columns">
+            <div className="form-group"><label htmlFor="firstname">First name <b>*</b></label><input type="text" id="firstname" name="firstname" value={formData.firstname} onChange={handleChange} placeholder="First name" required autoFocus /></div>
+            <div className="form-group"><label htmlFor="middlename">Middle name <b>*</b></label><input type="text" id="middlename" name="middlename" value={formData.middlename} onChange={handleChange} placeholder="Middle name" required /></div>
+            <div className="form-group"><label htmlFor="lastname">Last name <b>*</b></label><input type="text" id="lastname" name="lastname" value={formData.lastname} onChange={handleChange} placeholder="Last name" required /></div>
           </div>
-        )}
+        </section>
 
-        {(formData.type === "department_user" && !isAdviserCreation) ? (
-          <div className="form-group">
-            <label htmlFor="department_id">Department *</label>
-            <select
-              id="department_id"
-              name="department_id"
-              value={formData.department_id}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select Department</option>
-              {availableDepartments.map((dept) => (
-                <option key={dept.department_id} value={dept.department_id}>
-                  {dept.department_name}
-                </option>
-              ))}
-            </select>
-            {availableDepartments.length === 0 && (
-              <p className="warning-text" style={{ color: '#856404', fontSize: '0.9em', marginTop: '5px' }}>
-                All departments currently have assigned heads
-              </p>
-            )}
+        <section className="user-form-section">
+          <div className="user-section-heading"><span><FiKey /></span><div><h2>Sign-in credentials</h2><p>Create the username and initial password for this account.</p></div></div>
+          <div className="user-form-grid two-columns">
+            <div className="form-group"><label htmlFor="username">Username <b>*</b></label><input type="text" id="username" name="username" value={formData.username} onChange={handleChange} placeholder="Choose a username" autoComplete="username" required /></div>
+            <div className="form-group"><label htmlFor="password">Temporary password <b>*</b></label><input type="password" id="password" name="password" value={formData.password} onChange={handleChange} placeholder="Create a secure password" autoComplete="new-password" required /><small className="helper-text">Share this securely with the account owner.</small></div>
           </div>
-        ) : (
-          <>
-            <div className="form-group">
-              <label htmlFor="department_id">Department *</label>
-              <select
-                id="department_id"
-                name="department_id"
-                value={formData.department_id}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Department</option>
-                {departments.map((dept) => (
-                  <option key={dept.department_id} value={dept.department_id}>
-                    {dept.department_name}
-                  </option>
-                ))}
-              </select>
-            </div>
+        </section>
 
-            <div className="form-group">
-              <label htmlFor="section_id">Section *</label>
-              <select
-                id="section_id"
-                name="section_id"
-                value={formData.section_id}
-                onChange={handleChange}
-                required
-                disabled={!formData.department_id}
-              >
-                <option value="">Select Section</option>
-                {filteredSections.map((section) => (
-                  <option key={section.section_id} value={section.section_id}>
-                    {section.grade_level} - {section.section_name}
-                  </option>
-                ))}
-              </select>
-              {formData.department_id && filteredSections.length === 0 && (
-                <p className="warning-text" style={{ color: '#856404', fontSize: '0.9em', marginTop: '5px' }}>
-                  All sections in this department currently have assigned advisers
-                </p>
-              )}
+        <section className="user-form-section">
+          <div className="user-section-heading"><span><FiShield /></span><div><h2>Role and assignment</h2><p>Choose the account's responsibility and school assignment.</p></div></div>
+          {!isAdviserCreation && (
+            <div className="role-choice" role="radiogroup" aria-label="User type">
+              <label className={formData.type === "department_user" ? "selected" : ""}><input type="radio" name="type" value="department_user" checked={formData.type === "department_user"} onChange={handleChange} /><span><strong>Department head</strong><small>Manages a department, advisers, and student records.</small></span></label>
+              <label className={formData.type === "section_user" ? "selected" : ""}><input type="radio" name="type" value="section_user" checked={formData.type === "section_user"} onChange={handleChange} /><span><strong>Section adviser</strong><small>Manages learners and grades in one assigned section.</small></span></label>
             </div>
-          </>
-        )}
+          )}
+          <div className={`user-form-grid ${formData.type === "section_user" ? "two-columns" : "one-column"}`}>
+            <div className="form-group"><label htmlFor="department_id">Department <b>*</b></label><select id="department_id" name="department_id" value={formData.department_id} onChange={handleChange} required><option value="">Select department</option>{(formData.type === "department_user" && !isAdviserCreation ? availableDepartments : departments).map((dept) => <option key={dept.department_id} value={dept.department_id}>{dept.department_name}</option>)}</select>{formData.type === "department_user" && availableDepartments.length === 0 && <small className="assignment-warning">All departments currently have assigned heads.</small>}</div>
+            {formData.type === "section_user" && <div className="form-group"><label htmlFor="section_id">Section <b>*</b></label><select id="section_id" name="section_id" value={formData.section_id} onChange={handleChange} required disabled={!formData.department_id}><option value="">Select section</option>{filteredSections.map((section) => <option key={section.section_id} value={section.section_id}>{section.grade_level} - {section.section_name}</option>)}</select>{formData.department_id && filteredSections.length === 0 && <small className="assignment-warning">All sections in this department already have advisers.</small>}</div>}
+          </div>
+        </section>
 
-        <div className="form-actions">
-          <button type="submit" className="submit-button">
-            {isAdviserCreation ? 'Create Adviser' : 'Create User'}
-          </button>
-          <button
-            type="button"
-            className="cancel-button"
-            onClick={() => navigate("/Users")}
-          >
-            Cancel
-          </button>
+        <div className="form-actions modern-user-actions">
+          <div><strong>Ready to create this account?</strong><span>You’ll review all access details before they are saved.</span></div>
+          <div><button type="button" className="cancel-button" onClick={() => navigate("/Users")}>Cancel</button><button type="submit" className="submit-button"><FiCheck /> Review account</button></div>
         </div>
       </form>
 
-      {/* Confirmation Modal */}
-      {showConfirmModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Confirm {isAdviserCreation ? 'Adviser' : 'User'} Creation</h3>
-            <p>Are you sure you want to create a new {isAdviserCreation ? 'adviser' : 'user'} with the following details?</p>
-            <div className="confirmation-details">
-              <p><strong>Name:</strong> {formData.firstname} {formData.middlename} {formData.lastname}</p>
-              <p><strong>Username:</strong> {formData.username}</p>
-              {!isAdviserCreation && <p><strong>Type:</strong> {formData.type === 'department_user' ? 'Department Head' : 'Section Adviser'}</p>}
-              {formData.department_id && (
-                <p><strong>Department:</strong> {departments.find(d => d.department_id === parseInt(formData.department_id))?.department_name}</p>
-              )}
-              {formData.section_id && (
-                <p><strong>Section:</strong> {sections.find(s => s.section_id === parseInt(formData.section_id))?.section_name}</p>
-              )}
-            </div>
-            <div className="button-group">
-              <button className="submit-button" onClick={confirmSubmit}>
-                Confirm
-              </button>
-              <button className="cancel-button" onClick={cancelSubmit}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationModal isOpen={showConfirmModal} title={`Create ${formData.type === "section_user" ? "adviser" : "department head"} account?`} message="Review the account details and assignment before creating access." confirmLabel="Create account" cancelLabel="Go back" onConfirm={confirmSubmit} onCancel={cancelSubmit}>
+        <dl className="confirmation-details-list">
+          <div className="confirmation-detail"><dt>Name</dt><dd>{formData.firstname} {formData.middlename} {formData.lastname}</dd></div>
+          <div className="confirmation-detail"><dt>Username</dt><dd>{formData.username}</dd></div>
+          <div className="confirmation-detail"><dt>Role</dt><dd>{formData.type === "department_user" ? "Department head" : "Section adviser"}</dd></div>
+          {selectedDepartment && <div className="confirmation-detail"><dt>Department</dt><dd>{selectedDepartment.department_name}</dd></div>}
+          {selectedSection && <div className="confirmation-detail"><dt>Section</dt><dd>{selectedSection.grade_level} - {selectedSection.section_name}</dd></div>}
+        </dl>
+      </ConfirmationModal>
     </div>
   );
 }

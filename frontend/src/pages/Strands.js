@@ -4,6 +4,7 @@ import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../context/AuthContext";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 function StrandSections() {
   const { department_id } = useParams();
@@ -525,57 +526,15 @@ function StrandSections() {
           </div>
         )}
 
-        {showDeleteModal && sectionToDelete && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Confirm Delete</h3>
-              <p>Are you sure you want to delete section {sectionToDelete.section_name}?</p>
-              <div className="button-group">
-                <button 
-                  className="delete-button" 
-                  onClick={confirmDelete}
-                >
-                  Delete
-                </button>
-                <button
-                  className="cancel-button"
-                  onClick={() => {
-                    setShowDeleteModal(false);
-                    setSectionToDelete(null);
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <ConfirmationModal isOpen={showDeleteModal && Boolean(sectionToDelete)} title="Delete this section?" message="Learners and records associated with this section may be affected." confirmLabel="Delete section" variant="danger" onConfirm={confirmDelete} onCancel={() => { setShowDeleteModal(false); setSectionToDelete(null); }}>
+          <dl className="confirmation-details-list"><div className="confirmation-detail"><dt>Section</dt><dd>{sectionToDelete?.section_name}</dd></div></dl>
+          <p className="confirmation-warning">This action cannot be undone.</p>
+        </ConfirmationModal>
 
-        {showStrandDeleteModal && strandToDelete && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Confirm Delete</h3>
-              <p>Are you sure you want to delete strand {strandToDelete.strand_name}? <br /> This will also delete all associated sections.</p>
-              <div className="button-group">
-                <button 
-                  className="delete-button" 
-                  onClick={confirmStrandDelete}
-                >
-                  Delete
-                </button>
-                <button
-                  className="cancel-button"
-                  onClick={() => {
-                    setShowStrandDeleteModal(false);
-                    setStrandToDelete(null);
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <ConfirmationModal isOpen={showStrandDeleteModal && Boolean(strandToDelete)} title="Delete this strand?" message="The strand and every section associated with it will be permanently removed." confirmLabel="Delete strand" variant="danger" onConfirm={confirmStrandDelete} onCancel={() => { setShowStrandDeleteModal(false); setStrandToDelete(null); }}>
+          <dl className="confirmation-details-list"><div className="confirmation-detail"><dt>Strand</dt><dd>{strandToDelete?.strand_name}</dd></div></dl>
+          <p className="confirmation-warning">All associated sections will also be deleted. This cannot be undone.</p>
+        </ConfirmationModal>
 
         {showAddStrandModal && (
           <div className="modal-overlay">

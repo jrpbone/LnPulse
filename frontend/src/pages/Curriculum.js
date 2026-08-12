@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { useConfirmation } from '../context/ConfirmationContext';
 
 function Curriculum() {
+  const confirmAction = useConfirmation();
   const { strandId } = useParams();
   const location = useLocation();
   const strandName = location.state?.strandName;
@@ -90,7 +92,8 @@ function Curriculum() {
   };
 
   const handleRemoveSubject = async (curriculumId) => {
-    if (!window.confirm('Are you sure you want to remove this subject?')) return;
+    const confirmed = await confirmAction({ title: 'Remove this subject?', message: 'The subject will be removed from this curriculum period.', confirmLabel: 'Remove subject', variant: 'danger' });
+    if (!confirmed) return;
     try {
       await axios.delete(`http://localhost:3001/curriculum/${curriculumId}`);
       fetchCurriculum();

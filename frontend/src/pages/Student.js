@@ -4,6 +4,7 @@ import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAuth } from '../context/AuthContext';
+import { useConfirmation } from '../context/ConfirmationContext';
 import "./student.css";
 
 
@@ -13,6 +14,7 @@ function Student() {
   const { student_id } = useParams();
   const navigate = useNavigate();
   const { privileges } = useAuth();
+  const confirmAction = useConfirmation();
   const [postObject, setPostObject] = useState({});
   const [showAcadModal, setShowAcadModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -91,7 +93,8 @@ function Student() {
 
 
   const handleDelete = async (acads_id) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
+    const confirmed = await confirmAction({ title: "Delete this academic record?", message: "The selected academic record will be permanently removed from this student.", confirmLabel: "Delete record", variant: "danger" });
+    if (confirmed) {
       try {
         await axios.delete(`http://localhost:3001/academicInfo/${acads_id}`);
         setAcademicInfo((prev) =>

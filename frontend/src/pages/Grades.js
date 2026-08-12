@@ -3,9 +3,11 @@ import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import { Formik, Form, Field } from "formik";
 import Select from "react-select"; // Import react-select
+import { useConfirmation } from "../context/ConfirmationContext";
 
 
 function Grades() {
+  const confirmAction = useConfirmation();
   const [grades, setGrades] = useState([]);
   const [availableSubjects, setAvailableSubjects] = useState([]);
   const [showChecklistModal, setShowChecklistModal] = useState(false);
@@ -376,7 +378,8 @@ function Grades() {
 
 
   const handleDeleteGrade = async (grade_id) => {
-    if (!window.confirm("Are you sure you want to delete this grade?")) return;
+    const confirmed = await confirmAction({ title: "Delete this grade?", message: "The recorded grade will be permanently removed.", confirmLabel: "Delete grade", variant: "danger" });
+    if (!confirmed) return;
     try {
       await axios.delete(`http://localhost:3001/grades/${grade_id}`);
       

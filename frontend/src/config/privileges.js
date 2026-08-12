@@ -41,8 +41,7 @@ export const rolePrivileges = {
       { path: '/Users', label: 'Users', icon: 'users' },
       { path: '/Departments', label: 'Departments', icon: 'departments' },
       { path: '/Subjects', label: 'Subjects', icon: 'subjects' },
-      { path: '/StudentList', label: 'View Student List', icon: 'students' },
-      { path: '/CreateStudent', label: 'Create New Record', icon: 'add-student' },
+      { path: '/StudentList', label: 'Students', icon: 'students' },
       { path: '/Grades', label: 'Grades', icon: 'grades' },
       { path: '/Reports', label: 'Reports', icon: 'reports' }
     ]
@@ -86,8 +85,7 @@ export const rolePrivileges = {
     // Navigation - Only show specified tabs
     navigationItems: [
       { path: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
-      { path: '/CreateStudent', label: 'Create New Record', icon: 'add-student' },
-      { path: '/StudentList', label: 'View Student List', icon: 'students' },
+      { path: '/StudentList', label: 'Students', icon: 'students' },
       { path: '/Subjects', label: 'Subjects', icon: 'subjects' },
       { path: '/Users', label: 'Users', icon: 'users' },
       { path: '/Users/CreateUser', label: 'Add Adviser', icon: 'add-user' }
@@ -134,4 +132,4 @@ export const rolePrivileges = {
 // Helper function to get privileges for a role
 export const getPrivilegesForRole = (role) => {
   return rolePrivileges[role] || rolePrivileges.section_user; // Default to section_user if role not found
-}; 
+};

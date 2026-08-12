@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import "./stylestrand.css";
 import { useAuth } from '../context/AuthContext';
+import { FiLayers, FiPlus, FiX } from 'react-icons/fi';
+import WorkspacePageHeader from '../components/WorkspacePageHeader';
+import ConfirmationModal from '../components/ConfirmationModal';
+import "./DepartmentForms.css";
 
 function Departments() {
   const [listOfDepartments, setListOfDepartments] = useState([]);
@@ -17,11 +21,7 @@ function Departments() {
   const { departmentId } = useParams();
   const { privileges } = useAuth();
 
-  useEffect(() => {
-    fetchDepartments();
-  }, [departmentId]);
-
-  const fetchDepartments = async () => {
+  const fetchDepartments = useCallback(async () => {
     try {
       const response = await axios.get("http://localhost:3001/departments");
       // If user is a department head or if departmentId is in URL, filter to show only that department
@@ -37,7 +37,11 @@ function Departments() {
     } catch (error) {
       console.error("Error fetching departments:", error);
     }
-  };
+  }, [departmentId, privileges?.departmentId]);
+
+  useEffect(() => {
+    fetchDepartments();
+  }, [fetchDepartments]);
 
   const handleOpenAddModal = () => setShowAddModal(true);
   const handleCloseAddModal = () => setShowAddModal(false);
@@ -124,23 +128,25 @@ function Departments() {
   };
 
   return (
-    <div className="strand_panel">
+    <div className="strand_panel workspace-page department-page">
       {showSuccessMessage && (
         <div className="success-message">
           Operation completed successfully!
         </div>
       )}
       
-      <div className="header_div">
-        <h2 className="title">
-          Departments <span className="strand_count">{listOfDepartments.length}</span>
-        </h2>
-        {!privileges?.departmentId && (
-          <button onClick={handleOpenAddModal} className="add_button">
-            + Add a Department
+      <WorkspacePageHeader
+        eyebrow="Academic structure"
+        title="Departments"
+        count={listOfDepartments.length}
+        description="Browse departments and manage their strands and sections."
+        actions={!privileges?.departmentId ? (
+          <button onClick={handleOpenAddModal} className="workspace-primary-action">
+            <FiPlus aria-hidden="true" />
+            <span>New department</span>
           </button>
-        )}
-      </div>
+        ) : null}
+      />
 
       <div className="listOfStrands">
         {listOfDepartments.length === 0 ? (
@@ -196,9 +202,13 @@ function Departments() {
 
       {/* Add Department Modal */}
       {showAddModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Add New Department</h3>
+        <div className="modal-overlay department-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="new-department-title">
+          <div className="modal-content department-modal">
+            <div className="department-modal-header">
+              <div className="department-modal-icon"><FiLayers aria-hidden="true" /></div>
+              <div><p>Academic structure</p><h3 id="new-department-title">New department</h3><span>Create a department that can contain strands, sections, and students.</span></div>
+              <button type="button" className="department-modal-close" onClick={handleCloseAddModal} aria-label="Close"><FiX /></button>
+            </div>
             <Formik
               initialValues={{
                 department_name: "",
@@ -223,10 +233,10 @@ function Departments() {
                   });
               }}
             >
-              <Form>
+              <Form className="department-form">
                 <div className="form-group">
-                  <label>Department Name:</label>
-                  <Field name="department_name" type="text" className="form-input" />
+                  <label htmlFor="new-department-name">Department name <span>*</span></label>
+                  <Field id="new-department-name" name="department_name" type="text" className="form-input" placeholder="e.g. Humanities and Social Sciences" autoFocus />
                   <ErrorMessage
                     name="department_name"
                     component="div"
@@ -235,8 +245,8 @@ function Departments() {
                 </div>
 
                 <div className="form-group">
-                  <label>Department Description:</label>
-                  <Field name="department_description" type="text" className="form-input" />
+                  <label htmlFor="new-department-description">Description <span>*</span></label>
+                  <Field id="new-department-description" name="department_description" as="textarea" className="form-input department-description-input" placeholder="Briefly describe this department and its academic focus" />
                   <ErrorMessage
                     name="department_description"
                     component="div"
@@ -244,8 +254,8 @@ function Departments() {
                   />
                 </div>
 
-                <div className="button-group">
-                  <button type="submit" className="save-button">Save</button>
+                <div className="department-form-note"><FiLayers /><span>You can add strands and sections after creating the department.</span></div>
+                <div className="button-group department-modal-actions">
                   <button
                     type="button"
                     className="cancel-button"
@@ -253,6 +263,7 @@ function Departments() {
                   >
                     Cancel
                   </button>
+                  <button type="submit" className="save-button"><FiPlus /> Create department</button>
                 </div>
               </Form>
             </Formik>
@@ -310,30 +321,10 @@ function Departments() {
         </div>
       )}
 
-      {showDeleteModal && selectedDepartment && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Delete Department</h3>
-            <p>Are you sure you want to delete "{selectedDepartment.department_name}"?</p>
-            <p className="warning-text">This action cannot be undone.</p>
-            <div className="button-group">
-              <button
-                className="delete-button"
-                onClick={handleDelete}
-                style={{ padding: '10px 20px', fontSize: '14px' }}
-              >
-                Delete
-              </button>
-              <button
-                className="cancel-button"
-                onClick={handleCloseDeleteModal}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationModal isOpen={showDeleteModal && Boolean(selectedDepartment)} title="Delete this department?" message="This will permanently remove the department from the academic structure." confirmLabel="Delete department" variant="danger" onConfirm={handleDelete} onCancel={handleCloseDeleteModal}>
+        <dl className="confirmation-details-list"><div className="confirmation-detail"><dt>Department</dt><dd>{selectedDepartment?.department_name}</dd></div></dl>
+        <p className="confirmation-warning">This action cannot be undone.</p>
+      </ConfirmationModal>
     </div>
   );
 }
