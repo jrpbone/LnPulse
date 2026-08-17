@@ -97,7 +97,7 @@ CREATE TABLE `USERS_T` (
   `username` VARCHAR(100) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   `type` ENUM('admin', 'department_user', 'section_user') NOT NULL,
-  `status` TINYINT(1) NOT NULL DEFAULT 1,
+  `status` TINYINT NOT NULL DEFAULT 1,
   `createdAt` DATETIME NOT NULL,
   `updatedAt` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
