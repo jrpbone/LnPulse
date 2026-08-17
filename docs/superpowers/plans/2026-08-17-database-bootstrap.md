@@ -78,6 +78,7 @@ git commit -m "refactor: load database settings from environment"
 ### Task 2: Consolidated schema migration
 
 **Files:**
+- Create: `backend/test/support/mysql-test-database.js`
 - Create: `backend/test/schema-migration.test.js`
 - Create: `backend/migrations/20260817000000-initialize-lnhs-sis.js`
 - Delete: `backend/migrations/20240321000000-create-tables.js`
@@ -89,15 +90,15 @@ git commit -m "refactor: load database settings from environment"
 - Produces: Sequelize migration `down(queryInterface)` dropping all 15 application tables in reverse dependency order.
 - Consumes: the table and constraint contract in the approved design spec.
 
-- [ ] **Step 1: Write a failing migration contract test**
+- [ ] **Step 1: Write a failing migration integration test**
 
-Load the migration source and assert that it creates exactly the required application tables: `ADDRESS_T`, `PARENT_GUARDIAN_T`, `DEPARTMENT_T`, `STRAND_T`, `SECTION_T`, `CURRICULUM_T`, `USERS_T`, `STUDENT_T`, `ACADEMIC_INFO_T`, `ACADEMIC_PERFORMANCE_T`, `GRADES_T`, `ACADEMIC_SETTINGS_T`, `DEPARTMENT_USER_T`, `SECTION_USER_T`, and `REPORTS_T`. Assert reverse-order drops and critical unique constraints for usernames, curriculum identity, academic performance, and grades.
+Create a guarded MySQL test helper that accepts only database names beginning with `lnhs_sis_test_`, creates an isolated database through `mysql2`, and always drops that exact database during cleanup. Run the real migration through a Sequelize `QueryInterface`, then query `information_schema` to assert all required tables, foreign keys, and critical unique constraints exist. Run `down` and assert the application tables are removed.
 
 - [ ] **Step 2: Run the test and verify RED**
 
 Run: `cd backend; node --test test/schema-migration.test.js`
 
-Expected: failure because the consolidated migration is missing and current migrations omit active tables.
+Expected: failure because the consolidated migration is missing.
 
 - [ ] **Step 3: Implement the consolidated migration**
 
@@ -115,7 +116,7 @@ Use `admin`, `department_user`, and `section_user` in the user-role enum, and in
 
 Run: `cd backend; node --test test/schema-migration.test.js`
 
-Expected: migration contract passes.
+Expected: the real migration passes against isolated MySQL and reverses cleanly.
 
 - [ ] **Step 5: Commit migration changes**
 
@@ -135,9 +136,9 @@ git commit -m "feat: consolidate the LNHS-SIS schema migration"
 - Produces: migration baseline row `20260817000000-initialize-lnhs-sis.js` in `SequelizeMeta`.
 - Produces: exactly one `USERS_T` row with username `admin`, type `admin`, status `1`, and a bcrypt hash for `ChangeMe123!`.
 
-- [ ] **Step 1: Write a failing SQL bootstrap contract test**
+- [ ] **Step 1: Write a failing SQL bootstrap integration test**
 
-Assert that the SQL names the `lnhs-sis` database, recreates all required tables, restores foreign-key checks, records the consolidated migration, inserts one admin user, contains a bcrypt-formatted hash, and does not contain former sample identifiers such as `tvl_head`, `humss_adviser`, `Juan`, `TVL Department`, or `Oral Communication`.
+Load the SQL into the test harness, substitute only the literal bootstrap database identifier with a guarded `lnhs_sis_test_...` name, and execute the result through `mysql2`. Query the created database to assert all required tables exist, foreign-key checks were restored for the session, `SequelizeMeta` contains the consolidated migration, `USERS_T` contains exactly one active admin, `bcrypt.compare('ChangeMe123!', hash)` succeeds, and every other application table is empty.
 
 - [ ] **Step 2: Run the test and verify RED**
 
@@ -153,7 +154,7 @@ Generate the password hash with the installed `bcrypt` package. Write ordered dr
 
 Run: `cd backend; node --test test/sql-bootstrap.test.js`
 
-Expected: bootstrap contract passes and no demo data is detected.
+Expected: the imported isolated database has the complete schema and baseline admin only.
 
 - [ ] **Step 5: Commit SQL changes**
 
@@ -177,15 +178,15 @@ git commit -m "feat: add baseline-only MySQL bootstrap"
 - Produces package scripts: `db:migrate`, `db:migrate:status`, and `db:migrate:undo`.
 - Removes package scripts: `db:setup` and `db:seed`.
 
-- [ ] **Step 1: Write failing model and seeding tests**
+- [ ] **Step 1: Write failing model and startup tests**
 
-Load Sequelize model metadata without authenticating. Assert the admin role and academic summer term exist, assignment models have no timestamps and primary-key `user_id`, curriculum and grades expose their composite unique indexes, and the backend source/package scripts contain neither `sequelize.sync()` nor a seeder entry point.
+Load real Sequelize model metadata without authenticating. Assert the admin role and academic summer term exist, assignment models have no timestamps and primary-key `user_id`, and curriculum and grades expose their composite unique indexes. Against an isolated migrated database, call the real `prepareDatabase()`, then assert all application-table row counts remain unchanged at zero. Exercise package migration commands through their observable CLI behavior during the isolated migration check.
 
 - [ ] **Step 2: Run the tests and verify RED**
 
 Run: `cd backend; node --test test/model-contract.test.js test/no-runtime-seeding.test.js`
 
-Expected: failures for current schema drift and existing seeder scripts.
+Expected: failures for current schema drift and obsolete package commands.
 
 - [ ] **Step 3: Reconcile models and scripts**
 
@@ -208,35 +209,22 @@ git commit -m "refactor: remove application-managed seed data"
 
 **Files:**
 - Create: `backend/README.md`
-- Create: `backend/test/documentation-contract.test.js`
 
 **Interfaces:**
 - Produces: backend-specific installation, Workbench import, migration, startup, and first-login documentation.
 
-- [ ] **Step 1: Write a failing documentation test**
-
-Assert that `backend/README.md` describes the SQL file, fresh-install warning, `.env` workflow, all migration commands, `admin` / `ChangeMe123!`, immediate password replacement, and does not contain the supplied MySQL root password.
-
-- [ ] **Step 2: Run the test and verify RED**
-
-Run: `cd backend; node --test test/documentation-contract.test.js`
-
-Expected: failure because the backend README is missing.
-
-- [ ] **Step 3: Write backend documentation**
+- [ ] **Step 1: Write backend documentation**
 
 Document MySQL Workbench import steps, environment setup, installation/start commands, migration lifecycle, empty initial business data, admin configuration of the academic period, temporary credentials, and bootstrap replacement behavior. Do not modify the root README.
 
-- [ ] **Step 4: Run the test and verify GREEN**
+- [ ] **Step 2: Review the documentation against the approved spec**
 
-Run: `cd backend; node --test test/documentation-contract.test.js`
+Manually follow the documented setup sequence against the isolated test database. Confirm every command is valid, the warning appears before import instructions, the application credentials are correct, the MySQL root password is absent, and the project-root README diff is unchanged from its pre-existing state.
 
-Expected: documentation contract passes.
-
-- [ ] **Step 5: Commit documentation**
+- [ ] **Step 3: Commit documentation**
 
 ```bash
-git add backend/README.md backend/test/documentation-contract.test.js
+git add backend/README.md
 git commit -m "docs: add backend database setup guide"
 ```
 

@@ -6,7 +6,7 @@ $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $backendPath = Join-Path $projectRoot "backend"
 $frontendPath = Join-Path $projectRoot "frontend"
 $logPath = Join-Path $projectRoot ".dev-logs"
-$databaseConfigPath = Join-Path $backendPath "config\config.json"
+$databaseConfigPath = Join-Path $backendPath "config\config.js"
 
 function Write-Step {
     param([string]$Message)
@@ -79,8 +79,7 @@ if (-not (Get-Command npm.cmd -ErrorAction SilentlyContinue)) {
 
 New-Item -ItemType Directory -Path $logPath -Force | Out-Null
 
-$databaseConfig = Get-Content -LiteralPath $databaseConfigPath -Raw | ConvertFrom-Json
-$databasePort = [int]$databaseConfig.development.port
+$databasePort = [int](& node -e "process.stdout.write(String(require('./backend/config/config').development.port))")
 $backendPort = 3001
 $frontendPort = 3000
 
