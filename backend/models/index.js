@@ -31,9 +31,6 @@ fs
     db[model.name] = model;
   });
 
-// Include the REPORTS_T model in the exports
-db.REPORTS_T = require("./reports_t")(sequelize, Sequelize.DataTypes);
-
 // Associate the models
 Object.keys(db).forEach((key) => {
   if (db[key].associate) {

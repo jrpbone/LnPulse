@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       student_id: {
         type: DataTypes.BIGINT,
-        allowNull: true,
+        allowNull: false,
       },
       department_id: {
         type: DataTypes.INTEGER,

@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
     title: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
     description: {
@@ -59,19 +59,25 @@ module.exports = (sequelize, DataTypes) => {
   REPORTS_T.associate = (models) => {
     REPORTS_T.belongsTo(models.USERS_T, {
       foreignKey: 'created_by',
-      as: 'creator'
+      as: 'creator',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
     });
 
     REPORTS_T.belongsTo(models.DEPARTMENT_T, {
       foreignKey: 'department_id',
-      as: 'department'
+      as: 'department',
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE'
     });
 
     REPORTS_T.belongsTo(models.SECTION_T, {
       foreignKey: 'section_id',
-      as: 'section'
+      as: 'section',
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE'
     });
   };
 
   return REPORTS_T;
-}; 
+};

@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
       },
       department_name: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
       department_description: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING(255),
         allowNull: false,
       },
     },

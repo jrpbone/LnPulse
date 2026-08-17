@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       acads_id: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
       },
       curriculum_id: {
         type: DataTypes.INTEGER,
@@ -26,6 +26,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: "GRADES_T",
+      indexes: [
+        {
+          unique: true,
+          fields: ["acads_id", "curriculum_id"],
+          name: "grades_academic_record_curriculum_unique",
+        },
+      ],
     }
   );
 

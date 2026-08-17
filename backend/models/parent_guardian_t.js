@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       pgMiddleName: {
         type: DataTypes.STRING(50),
-        allowNull: false,
+        allowNull: true,
       },
       pgLastName: {
         type: DataTypes.STRING(50),

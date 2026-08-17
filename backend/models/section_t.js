@@ -10,14 +10,14 @@ module.exports = (sequelize, DataTypes) => {
       },
       strand_id: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
       },
       grade_level: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
       section_name: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
     },
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
   Section.associate = (models) => {
     Section.belongsTo(models.STRAND_T, {
       foreignKey: "strand_id",
-      onDelete: "SET NULL",
+      onDelete: "CASCADE",
       onUpdate: "CASCADE",
     });
 

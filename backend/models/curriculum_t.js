@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
           autoIncrement: true,
         },
         subject_name: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING(150),
           allowNull: false,
         },
         subject_description: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING(255),
           allowNull: false,
         },
         grade_level: {
@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         strand_id: {
           type: DataTypes.INTEGER,
-          allowNull: true,
+          allowNull: false,
         }
       },
       {
@@ -45,26 +45,7 @@ module.exports = (sequelize, DataTypes) => {
             // Create a unique composite index for subject validation
             unique: true,
             fields: ['strand_id', 'grade_level', 'semester', 'subject_name'],
-            name: 'unique_subject_per_strand_grade_semester',
-            // Add a where clause to make it case insensitive
-            validate: {
-              async isDuplicate() {
-                const existing = await Curriculum.findOne({
-                  where: {
-                    strand_id: this.strand_id,
-                    grade_level: this.grade_level,
-                    semester: this.semester,
-                    subject_name: sequelize.where(
-                      sequelize.fn('LOWER', sequelize.col('subject_name')),
-                      sequelize.fn('LOWER', this.subject_name)
-                    )
-                  }
-                });
-                if (existing && existing.curriculum_id !== this.curriculum_id) {
-                  throw new Error('Subject already exists in this strand, grade level and semester');
-                }
-              }
-            }
+            name: 'curriculum_strand_grade_semester_subject_unique',
           }
         ]
       }
@@ -80,4 +61,3 @@ module.exports = (sequelize, DataTypes) => {
   
     return Curriculum;
   };
-  

@@ -167,8 +167,8 @@ git commit -m "feat: add baseline-only MySQL bootstrap"
 
 **Files:**
 - Create: `backend/test/model-contract.test.js`
-- Create: `backend/test/no-runtime-seeding.test.js`
 - Modify: applicable files in `backend/models/*.js`
+- Create: `backend/.sequelizerc`
 - Modify: `backend/package.json`
 - Modify: `backend/package-lock.json`
 - Delete: `backend/seeders/seed.js`
@@ -178,15 +178,15 @@ git commit -m "feat: add baseline-only MySQL bootstrap"
 - Produces package scripts: `db:migrate`, `db:migrate:status`, and `db:migrate:undo`.
 - Removes package scripts: `db:setup` and `db:seed`.
 
-- [ ] **Step 1: Write failing model and startup tests**
+- [ ] **Step 1: Write failing model contract tests**
 
-Load real Sequelize model metadata without authenticating. Assert the admin role and academic summer term exist, assignment models have no timestamps and primary-key `user_id`, and curriculum and grades expose their composite unique indexes. Against an isolated migrated database, call the real `prepareDatabase()`, then assert all application-table row counts remain unchanged at zero. Exercise package migration commands through their observable CLI behavior during the isolated migration check.
+Load real Sequelize model metadata without authenticating. Assert the admin role and academic summer term exist, required parent identifiers are non-null, organization and curriculum lengths match the schema, assignment models have no timestamps and primary-key `user_id`, and curriculum and grades expose their composite unique indexes. Startup was already authentication-only before this task, so verify that preserved behavior during final integration rather than adding a test that passes before the change. Exercise package migration commands through their observable CLI behavior during the isolated migration check.
 
 - [ ] **Step 2: Run the tests and verify RED**
 
-Run: `cd backend; node --test test/model-contract.test.js test/no-runtime-seeding.test.js`
+Run: `cd backend; node --test test/model-contract.test.js`
 
-Expected: failures for current schema drift and obsolete package commands.
+Expected: failures for current schema drift.
 
 - [ ] **Step 3: Reconcile models and scripts**
 
@@ -194,9 +194,9 @@ Update model attributes and indexes to match the consolidated schema. Remove the
 
 - [ ] **Step 4: Run the tests and verify GREEN**
 
-Run: `cd backend; node --test test/model-contract.test.js test/no-runtime-seeding.test.js`
+Run: `cd backend; node --test test/model-contract.test.js`
 
-Expected: all model and no-seeding contracts pass.
+Expected: all model contracts pass.
 
 - [ ] **Step 5: Commit model and runtime changes**
 
