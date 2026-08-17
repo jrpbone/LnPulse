@@ -43,8 +43,6 @@ backend/
 |-- config/           # Sequelize CLI/database configuration
 |-- migrations/       # Database schema history
 |-- models/           # Sequelize entities and associations
-|-- seeders/
-|   `-- seed.js       # Single explicit database seeder
 |-- src/
 |   |-- config/       # Runtime application configuration
 |   |-- middleware/   # Express-wide request/error behavior
@@ -56,12 +54,14 @@ backend/
 `-- index.js          # Minimal process entry point
 ```
 
+The repository-level `database/lnhs-sis.sql` file is the fresh-install schema and baseline administrator import.
+
 - Register a module once in `src/routes.js`; keep its handlers in the owning domain folder.
 - Extract reusable business workflows from route handlers into a nearby service as they grow.
 - Keep `app.js` free of startup side effects so it can be imported by integration tests.
 - Keep Sequelize models at the backend root until migrations and Sequelize CLI configuration are migrated together.
-- Keep application startup read-only with respect to schema and seed data. Use `npm run db:setup` for a new local database and `npm run db:seed` for an existing schema.
-- Keep the single seeder deterministic, transactional, and keyed by stable business identifiers so repeat runs are safe.
+- Keep application startup read-only with respect to schema and baseline data. Initialize a new local database by importing `database/lnhs-sis.sql` and use Sequelize migrations only for later schema changes.
+- Keep sample data out of application code. The SQL bootstrap contains only the required baseline administrator; all business data is created through the API and stored in MySQL.
 
 ## Scaling the next increment
 
