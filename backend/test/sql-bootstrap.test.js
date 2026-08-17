@@ -7,9 +7,9 @@ const bcrypt = require('bcrypt');
 const {
   assertSafeTestDatabaseName,
   createAdminConnection,
+  createTestDatabaseName,
 } = require('./support/mysql-test-database');
 
-const TEST_DATABASE = 'lnhs_sis_test_sql_bootstrap';
 const SQL_PATH = path.resolve(__dirname, '..', '..', 'database', 'lnhs-sis.sql');
 const MIGRATION_NAME = '20260817000000-initialize-lnhs-sis.js';
 const EMPTY_BASELINE_TABLES = [
@@ -30,13 +30,13 @@ const EMPTY_BASELINE_TABLES = [
 ];
 
 test('the SQL bootstrap creates the complete baseline with only one admin', async () => {
-  assertSafeTestDatabaseName(TEST_DATABASE);
+  const testDatabase = createTestDatabaseName('sql_bootstrap');
+  assertSafeTestDatabaseName(testDatabase);
   const bootstrapSql = fs.readFileSync(SQL_PATH, 'utf8');
-  const isolatedSql = bootstrapSql.replaceAll('`lnhs-sis`', `\`${TEST_DATABASE}\``);
+  const isolatedSql = bootstrapSql.replaceAll('`lnhs-sis`', `\`${testDatabase}\``);
   const connection = await createAdminConnection();
 
   try {
-    await connection.query(`DROP DATABASE IF EXISTS \`${TEST_DATABASE}\``);
     await connection.query(isolatedSql);
 
     const [tableRows] = await connection.query(`
@@ -44,19 +44,19 @@ test('the SQL bootstrap creates the complete baseline with only one admin', asyn
       FROM information_schema.TABLES
       WHERE TABLE_SCHEMA = ?
       ORDER BY TABLE_NAME
-    `, [TEST_DATABASE]);
+    `, [testDatabase]);
     const tables = tableRows.map(({ TABLE_NAME }) => TABLE_NAME.toUpperCase());
     assert.equal(tables.length, 16);
     assert.ok(tables.includes('SEQUELIZEMETA'));
     assert.ok(tables.includes('USERS_T'));
 
     const [migrationRows] = await connection.query(
-      `SELECT name FROM \`${TEST_DATABASE}\`.\`SequelizeMeta\``
+      `SELECT name FROM \`${testDatabase}\`.\`SequelizeMeta\``
     );
     assert.deepEqual(migrationRows, [{ name: MIGRATION_NAME }]);
 
     const [users] = await connection.query(
-      `SELECT username, password, type, status FROM \`${TEST_DATABASE}\`.\`USERS_T\``
+      `SELECT username, password, type, status FROM \`${testDatabase}\`.\`USERS_T\``
     );
     assert.equal(users.length, 1);
     assert.equal(users[0].username, 'admin');
@@ -66,7 +66,7 @@ test('the SQL bootstrap creates the complete baseline with only one admin', asyn
 
     for (const tableName of EMPTY_BASELINE_TABLES) {
       const [rows] = await connection.query(
-        `SELECT COUNT(*) AS row_count FROM \`${TEST_DATABASE}\`.\`${tableName}\``
+        `SELECT COUNT(*) AS row_count FROM \`${testDatabase}\`.\`${tableName}\``
       );
       assert.equal(rows[0].row_count, 0, `${tableName} must start empty`);
     }
@@ -76,7 +76,7 @@ test('the SQL bootstrap creates the complete baseline with only one admin', asyn
     );
     assert.equal(foreignKeySetting[0].enabled, 1);
   } finally {
-    await connection.query(`DROP DATABASE IF EXISTS \`${TEST_DATABASE}\``);
+    await connection.query(`DROP DATABASE \`${testDatabase}\``);
     await connection.end();
   }
 });

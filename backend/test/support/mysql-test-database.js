@@ -1,4 +1,6 @@
+const { randomBytes } = require('node:crypto');
 const mysql = require('mysql2/promise');
+const { escapeId } = require('mysql2');
 const { Sequelize } = require('sequelize');
 
 const {
@@ -6,7 +8,22 @@ const {
   loadLocalEnvironment,
 } = require('../../config/database');
 
-const TEST_DATABASE_PATTERN = /^lnhs_sis_test_[a-z0-9_]+$/;
+const TEST_DATABASE_PATTERN =
+  /^lnhs_sis_test_[a-z0-9_]+_[0-9]+_[a-f0-9]{16}$/;
+
+const createTestDatabaseName = (label) => {
+  const safeLabel = String(label)
+    .toLowerCase()
+    .replace(/[^a-z0-9_]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .slice(0, 20);
+
+  if (!safeLabel) {
+    throw new Error('A test database label is required');
+  }
+
+  return `lnhs_sis_test_${safeLabel}_${process.pid}_${randomBytes(8).toString('hex')}`;
+};
 
 const assertSafeTestDatabaseName = (databaseName) => {
   if (!TEST_DATABASE_PATTERN.test(databaseName)) {
@@ -29,16 +46,19 @@ const createAdminConnection = async () => {
   });
 };
 
-const withTestDatabase = async (databaseName, callback) => {
+const withTestDatabase = async (label, callback) => {
+  const databaseName = createTestDatabaseName(label);
   assertSafeTestDatabaseName(databaseName);
   const adminConnection = await createAdminConnection();
+  const escapedDatabaseName = escapeId(databaseName);
+  let databaseCreated = false;
   let sequelize;
 
   try {
-    await adminConnection.query(`DROP DATABASE IF EXISTS \`${databaseName}\``);
     await adminConnection.query(
-      `CREATE DATABASE \`${databaseName}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
+      `CREATE DATABASE ${escapedDatabaseName} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
     );
+    databaseCreated = true;
 
     const config = createDatabaseConfig(
       { ...process.env, DB_NAME: databaseName },
@@ -57,7 +77,9 @@ const withTestDatabase = async (databaseName, callback) => {
     if (sequelize) {
       await sequelize.close();
     }
-    await adminConnection.query(`DROP DATABASE IF EXISTS \`${databaseName}\``);
+    if (databaseCreated) {
+      await adminConnection.query(`DROP DATABASE ${escapedDatabaseName}`);
+    }
     await adminConnection.end();
   }
 };
@@ -65,5 +87,6 @@ const withTestDatabase = async (databaseName, callback) => {
 module.exports = {
   assertSafeTestDatabaseName,
   createAdminConnection,
+  createTestDatabaseName,
   withTestDatabase,
 };

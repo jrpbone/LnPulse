@@ -3,7 +3,12 @@ const path = require('node:path');
 const DEFAULT_DATABASE_PORT = 3307;
 
 const parsePort = (value, fallback = DEFAULT_DATABASE_PORT) => {
-  const port = Number.parseInt(value, 10);
+  const normalizedValue = String(value ?? '').trim();
+  if (!/^\d+$/.test(normalizedValue)) {
+    return fallback;
+  }
+
+  const port = Number(normalizedValue);
   return Number.isInteger(port) && port > 0 && port <= 65535 ? port : fallback;
 };
 
@@ -50,7 +55,22 @@ const loadLocalEnvironment = (
   }
 };
 
+const buildDatabaseConfigurations = (environment = process.env) => {
+  const configurations = {
+    development: createDatabaseConfig(environment, 'development'),
+    test: createDatabaseConfig(environment, 'test'),
+  };
+
+  Object.defineProperty(configurations, 'production', {
+    enumerable: true,
+    get: () => createDatabaseConfig(environment, 'production'),
+  });
+
+  return configurations;
+};
+
 module.exports = {
+  buildDatabaseConfigurations,
   createDatabaseConfig,
   loadLocalEnvironment,
   parsePort,

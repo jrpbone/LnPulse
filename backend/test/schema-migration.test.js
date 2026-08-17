@@ -5,6 +5,7 @@ const Sequelize = require('sequelize');
 const migration = require('../migrations/20260817000000-initialize-lnhs-sis');
 const {
   assertSafeTestDatabaseName,
+  createTestDatabaseName,
   withTestDatabase,
 } = require('./support/mysql-test-database');
 
@@ -29,13 +30,23 @@ const REQUIRED_TABLES = [
 test('the test database guard rejects production-like names', () => {
   assert.throws(() => assertSafeTestDatabaseName('lnhs-sis'), /unsafe/);
   assert.throws(() => assertSafeTestDatabaseName('lnhs_sis_test'), /unsafe/);
-  assert.doesNotThrow(() =>
-    assertSafeTestDatabaseName('lnhs_sis_test_schema_contract')
+  assert.throws(
+    () => assertSafeTestDatabaseName('lnhs_sis_test_schema_contract'),
+    /unsafe/
   );
 });
 
+test('test database names are unique and remain inside the guarded namespace', () => {
+  const firstName = createTestDatabaseName('schema_contract');
+  const secondName = createTestDatabaseName('schema_contract');
+
+  assertSafeTestDatabaseName(firstName);
+  assertSafeTestDatabaseName(secondName);
+  assert.notEqual(firstName, secondName);
+});
+
 test('the consolidated migration creates and removes the complete schema', async () => {
-  await withTestDatabase('lnhs_sis_test_schema_contract', async ({ sequelize }) => {
+  await withTestDatabase('schema_contract', async ({ sequelize }) => {
     const queryInterface = sequelize.getQueryInterface();
     await migration.up(queryInterface, Sequelize);
 

@@ -9,11 +9,10 @@ const migration = require('../migrations/20260817000000-initialize-lnhs-sis');
 const {
   assertSafeTestDatabaseName,
   createAdminConnection,
+  createTestDatabaseName,
   withTestDatabase,
 } = require('./support/mysql-test-database');
 
-const MIGRATION_DATABASE = 'lnhs_sis_test_parity_migration';
-const SQL_DATABASE = 'lnhs_sis_test_parity_sql';
 const SQL_PATH = path.resolve(__dirname, '..', '..', 'database', 'lnhs-sis.sql');
 
 const normalizeDefault = (value) => {
@@ -80,29 +79,29 @@ const getSchemaSnapshot = async (connection, databaseName) => {
 };
 
 test('the SQL bootstrap schema matches the consolidated migration', async () => {
-  assertSafeTestDatabaseName(SQL_DATABASE);
+  const sqlDatabase = createTestDatabaseName('parity_sql');
+  assertSafeTestDatabaseName(sqlDatabase);
 
-  await withTestDatabase(MIGRATION_DATABASE, async ({ sequelize }) => {
+  await withTestDatabase('parity_migration', async ({ databaseName, sequelize }) => {
     await migration.up(sequelize.getQueryInterface(), Sequelize);
     const adminConnection = await createAdminConnection();
 
     try {
-      const escapedSqlDatabase = mysql.escapeId(SQL_DATABASE);
-      await adminConnection.query(`DROP DATABASE IF EXISTS ${escapedSqlDatabase}`);
+      const escapedSqlDatabase = mysql.escapeId(sqlDatabase);
       const bootstrapSql = fs
         .readFileSync(SQL_PATH, 'utf8')
-        .replaceAll('`lnhs-sis`', `\`${SQL_DATABASE}\``);
+        .replaceAll('`lnhs-sis`', `\`${sqlDatabase}\``);
       await adminConnection.query(bootstrapSql);
 
       const migrationSnapshot = await getSchemaSnapshot(
         adminConnection,
-        MIGRATION_DATABASE
+        databaseName
       );
-      const sqlSnapshot = await getSchemaSnapshot(adminConnection, SQL_DATABASE);
+      const sqlSnapshot = await getSchemaSnapshot(adminConnection, sqlDatabase);
       assert.deepEqual(sqlSnapshot, migrationSnapshot);
     } finally {
       await adminConnection.query(
-        `DROP DATABASE IF EXISTS ${mysql.escapeId(SQL_DATABASE)}`
+        `DROP DATABASE ${mysql.escapeId(sqlDatabase)}`
       );
       await adminConnection.end();
     }

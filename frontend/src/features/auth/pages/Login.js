@@ -47,40 +47,6 @@ function Login() {
         return;
       }
     } catch (err) {
-      if (username === "admin" && password === "admin") {
-        const adminUser = {
-          id: 1,
-          username: "admin",
-          type: "admin",
-          privileges: {
-            canManageUsers: true,
-            canManageDepartments: true,
-            canViewDepartments: true,
-            canAddDepartmentUsers: true,
-            canManageSections: true,
-            canViewAllStudents: true,
-            canManageStudents: true,
-            canViewAllGrades: true,
-            canManageGrades: true,
-            canViewReports: true,
-            canManageReports: true,
-            canViewAllSections: true,
-            canManageAllSections: true,
-            canViewSubjects: true,
-            canViewCurriculum: true,
-          },
-        };
-
-        login(adminUser);
-        setShowModal(true);
-        setTimeout(() => {
-          setShowModal(false);
-          navigate("/dashboard");
-        }, 1200);
-        setLoading(false);
-        return;
-      }
-
       setError(err.response?.data?.message || "The username or password is incorrect.");
       setLoading(false);
     }

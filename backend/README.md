@@ -82,12 +82,14 @@ npm run db:migrate
 # Show applied and pending migrations
 npm run db:migrate:status
 
-# Roll back the most recent migration
+# Roll back the most recent migration (potentially destructive)
 npm run db:migrate:undo
 
 # Roll back all migrations (destructive)
 npm run db:migrate:undo:all
 ```
+
+> **Rollback warning:** Back up the database before either rollback command. If the consolidated initial migration is the most recent applied migration, even `db:migrate:undo` drops every LNHS-SIS application table and its data. `db:migrate:undo:all` does the same as part of rolling back the complete history.
 
 Do not use `db:migrate` as a substitute for the initial SQL import: migrations create schema, while the supported bootstrap also installs the one required administrator account.
 
@@ -99,7 +101,7 @@ Start the configured local MySQL service, then run:
 npm test
 ```
 
-The integration tests create and remove only guarded databases whose names begin with `lnhs_sis_test_`. They never import the bootstrap over `lnhs-sis`.
+The integration tests generate unique, guarded database names beginning with `lnhs_sis_test_`, create them without replacing pre-existing databases, and remove only the databases created by that test run. They never import the bootstrap over `lnhs-sis`.
 
 ## Runtime data behavior
 

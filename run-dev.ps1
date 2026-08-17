@@ -79,7 +79,7 @@ if (-not (Get-Command npm.cmd -ErrorAction SilentlyContinue)) {
 
 New-Item -ItemType Directory -Path $logPath -Force | Out-Null
 
-$databasePort = [int](& node -e "process.stdout.write(String(require('./backend/config/config').development.port))")
+$databasePort = [int](& node -e "process.stdout.write(String(require(process.argv[1]).development.port))" $databaseConfigPath)
 $backendPort = 3001
 $frontendPort = 3000
 

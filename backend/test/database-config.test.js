@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const { describe, it } = require('node:test');
 
 const {
+  buildDatabaseConfigurations,
   createDatabaseConfig,
   parsePort,
 } = require('../config/database');
@@ -12,6 +13,10 @@ describe('database configuration', () => {
     assert.equal(parsePort('not-a-port', 3307), 3307);
     assert.equal(parsePort('0', 3307), 3307);
     assert.equal(parsePort('65536', 3307), 3307);
+    assert.equal(parsePort('3307junk', 3307), 3307);
+    assert.equal(parsePort('3307.5', 3307), 3307);
+    assert.equal(parsePort('1e3', 3307), 3307);
+    assert.equal(parsePort(' 3306 ', 3307), 3306);
   });
 
   it('builds the development connection from environment values', () => {
@@ -58,5 +63,23 @@ describe('database configuration', () => {
       () => createDatabaseConfig({ DB_NAME: 'lnhs-sis' }, 'production'),
       /DB_USER, DB_PASSWORD/
     );
+  });
+
+  it('validates production when the exported production entry is selected', () => {
+    const configurations = buildDatabaseConfigurations({});
+
+    assert.equal(configurations.development.database, 'lnhs-sis');
+    assert.throws(
+      () => configurations.production,
+      /DB_NAME, DB_USER, DB_PASSWORD/
+    );
+
+    const production = buildDatabaseConfigurations({
+      DB_NAME: 'lnhs_production',
+      DB_USER: 'lnhs_service',
+      DB_PASSWORD: 'production-secret',
+    }).production;
+    assert.equal(production.database, 'lnhs_production');
+    assert.equal(production.username, 'lnhs_service');
   });
 });
