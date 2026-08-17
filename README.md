@@ -1,181 +1,200 @@
-# LnPulse (LNHS-SIS)
+<div align="center">
+  <img src="frontend/public/logo512.png" alt="Ligao National High School seal" width="132" />
 
-Full Stack Web App - Student Information System for LNHS.
+  <h1>LnPulse</h1>
 
-This is my first-ever full-stack application.
+  <p><strong>LNHS Student Information System</strong></p>
+  <p>A full-stack platform for managing students, academics, users, and school operations at Ligao National High School.</p>
 
-## Contributors
+  <p>
+    <img src="https://img.shields.io/badge/React-19.1-61DAFB?logo=react&logoColor=101010" alt="React 19.1" />
+    <img src="https://img.shields.io/badge/React_Router-7.5-CA4245?logo=reactrouter&logoColor=white" alt="React Router 7.5" />
+    <img src="https://img.shields.io/badge/Express-5.1-000000?logo=express&logoColor=white" alt="Express 5.1" />
+    <img src="https://img.shields.io/badge/Sequelize-6.37-52B0E7?logo=sequelize&logoColor=white" alt="Sequelize 6.37" />
+    <img src="https://img.shields.io/badge/MySQL-Database-4479A1?logo=mysql&logoColor=white" alt="MySQL" />
+    <img src="https://img.shields.io/badge/Node.js-20.19-339933?logo=nodedotjs&logoColor=white" alt="Node.js 20.19" />
+  </p>
 
-- John Ralph P. Bone
-- Dan Emmanuel G. Pispis
-- John Benedict B. Candelaria
-  
-## Built using
+  <h3>Original Developers</h3>
 
-- React, JavaScript, and CSS for the frontend
-- Express.js, Sequelize, and MySQL for the backend
+  <table>
+    <tr>
+      <td align="center" width="33%"><strong>John Ralph P. Bone</strong><br /><sub>Original Developer</sub></td>
+      <td align="center" width="33%"><strong>Dan Emmanuel G. Pispis</strong><br /><sub>Original Developer</sub></td>
+      <td align="center" width="33%"><strong>John Benedict B. Candelaria</strong><br /><sub>Original Developer</sub></td>
+    </tr>
+  </table>
+</div>
 
-## About the project
+## About LnPulse
 
-LnPulse helps LNHS manage student records, academic information, grades, departments, strands, sections, curricula, users, and reports from one web application. Access to features is based on the signed-in user's role: administrator, department user, or section adviser.
+LnPulse gives LNHS one place to manage student records, academic information, grades, departments, strands, sections, curricula, users, and reports. The interface adapts to the signed-in administrator, department user, or section adviser.
 
-The project has not yet been migrated to a public domain, but it can be run locally using XAMPP.
+### Highlights
 
-## Features
-
-- Dashboard with school and student statistics
-- Student registration, profiles, status, and academic history
+- Dashboard statistics and active academic-period controls
+- Student registration, profiles, status tracking, and academic history
 - Grade and academic-performance management
 - Department, strand, section, subject, and curriculum management
-- User accounts with role-based access
-- Section-specific student views for advisers
-- Report management
+- Administrator, department-user, and section-adviser workflows
+- Section-specific student views and report management
+- MySQL-backed persistence with an explicit SQL bootstrap and migration history
 
-## Requirements
+## Technology stack
 
-Install the following before running the project:
+| Area | Technologies in this repository |
+| --- | --- |
+| Frontend | React `19.1`, React DOM `19.1`, React Router `7.5`, Create React App / React Scripts `5.0` |
+| Forms and UI | Formik `2.4`, Yup `1.6`, React Select `5.10`, React Icons `5.5` |
+| HTTP client | Axios `1.8` with a shared API client |
+| Backend | Node.js `20.19`, Express `5.1`, CORS `2.8`, bcrypt `6.0` |
+| Data layer | MySQL, MySQL2 `3.14`, Sequelize `6.37`, Sequelize CLI `6.6` |
+| Testing | Node.js test runner, React Testing Library `16.3`, Jest through React Scripts |
 
-- [Node.js](https://nodejs.org/) `20.19.0` (the version recorded in `.nvmrc`)
+## Local setup
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) `20.19.0` — the version recorded in `.nvmrc`
 - npm
-- [XAMPP](https://www.apachefriends.org/) with MySQL
+- A local MySQL or MariaDB server
+- [MySQL Workbench](https://www.mysql.com/products/workbench/) for the supported fresh-database import
 
-## How to run
+Apache is not required: Express serves the API and React runs through its Node.js development server.
 
-### 1. Prepare the project
+### 1. Clone and install
 
-Clone or download the repository. Keep its three main items together: the `frontend` folder, the `backend` folder, and this `README.md` file.
+```powershell
+git clone https://github.com/jrpbone/LnPulse.git
+Set-Location LnPulse
 
-Install the backend dependencies:
+Set-Location backend
+npm install
 
-```bash
-cd backend
+Set-Location ..\frontend
 npm install
 ```
 
-Install the frontend dependencies in a second terminal:
+### 2. Configure the backend
 
-```bash
-cd frontend
-npm install
+Create the local environment file from the checked-in example:
+
+```powershell
+Set-Location ..\backend
+Copy-Item .env.example .env
 ```
 
-### 2. Start XAMPP and configure MySQL
+Edit `backend/.env` to match your MySQL Workbench connection:
 
-Open XAMPP and start the Apache and MySQL servers.
+```dotenv
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_NAME=lnhs-sis
+DB_USER=root
+DB_PASSWORD=your-local-mysql-password
+```
 
-Create an empty MySQL database named:
+Use the actual port from your MySQL connection; local installations commonly use `3306` or `3307`. The `.env` file is ignored by Git and must not be committed.
+
+### 3. Import the database
+
+> [!WARNING]
+> [`database/lnhs-sis.sql`](database/lnhs-sis.sql) is a fresh-install script. It drops and recreates the `lnhs-sis` database, so back up any existing data before executing it.
+
+In MySQL Workbench:
+
+1. Connect to your local MySQL server.
+2. Select **File → Open SQL Script**.
+3. Open `database/lnhs-sis.sql` from this repository.
+4. Review the warning at the top, then execute the complete script.
+5. Refresh **Schemas** and confirm that `lnhs-sis` is present.
+
+The import creates the complete schema, records the consolidated initial migration, and inserts only the required baseline administrator. Departments, strands, sections, curriculum entries, students, academic settings, grades, and reports begin empty and are fetched from MySQL as they are created through the application.
+
+Application startup never creates tables or inserts sample data. Use Sequelize migrations only for schema changes added after the baseline:
+
+```powershell
+Set-Location backend
+npm run db:migrate
+```
+
+### 4. Start the application
+
+Start the API from `backend/`:
+
+```powershell
+npm start
+```
+
+The backend listens on [http://localhost:3001](http://localhost:3001) unless `PORT` is set.
+
+In a second terminal, start the client from `frontend/`:
+
+```powershell
+npm start
+```
+
+Open [http://localhost:3000](http://localhost:3000). The frontend calls `http://localhost:3001` by default; copy `frontend/.env.example` to `frontend/.env` and set `REACT_APP_API_URL` if the API uses a different origin.
+
+## First application login
+
+After importing the SQL bootstrap, sign in with the temporary application account:
 
 ```text
-lnhs-sis
+Username: admin
+Password: ChangeMe123!
 ```
 
-The development database connection is configured in `backend/config/config.json` with these defaults:
+Change this password immediately from user management, then configure the active school year and semester on the dashboard. These are application credentials, not MySQL credentials.
 
-| Setting | Default |
-| --- | --- |
-| Host | `localhost` |
-| Port | `3307` |
-| Username | `root` |
-| Password | empty |
-| Database | `lnhs-sis` |
-
-Make sure the configured port matches the MySQL port shown in XAMPP. XAMPP often uses port `3306`; if yours does, update the development `port` in `backend/config/config.json` before starting the backend.
-
-### 3. Initialize a new database
-
-For a brand-new, empty database, run the explicit setup command from `backend/`:
-
-```bash
-npm run db:setup
-```
-
-This safely creates missing tables and runs the single database seeder. It does not drop existing tables or records.
-
-To apply the seed data to an existing schema, run:
-
-```bash
-npm run db:seed
-```
-
-The seeder is deterministic, transactional, and idempotent: rerunning it fills in missing seed records without duplicating them, and a failure rolls back that run. Application startup never creates, resets, or seeds tables.
-
-### 4. Start the backend
-
-Run the backend first, as originally recommended:
-
-```bash
-cd backend
-npm start
-```
-
-The API runs at [http://localhost:3001](http://localhost:3001).
-
-For development with automatic server restarts, use:
-
-```bash
-npm run dev
-```
-
-### 5. Start the frontend
-
-In a separate terminal, run:
-
-```bash
-cd frontend
-npm start
-```
-
-Open [http://localhost:3000](http://localhost:3000) in a browser. The frontend sends API requests to `http://localhost:3001` by default; set `REACT_APP_API_URL` when the backend uses another origin.
-
-## Seeded development accounts
-
-The seeder creates department and adviser accounts with the development password `password123`. Set `SEED_DEFAULT_PASSWORD` before the first seed to choose a different password. Existing account passwords are never overwritten by later seed runs. Example usernames include `tvl_head`, `feh_head`, `ams_head`, `humss_adviser`, `stem_adviser`, and `abm_adviser`.
-
-These credentials are for local development only. Change the passwords before using the application with real data.
-
-## Available scripts
+## Common scripts
 
 ### Backend
 
-Run these commands from `backend/`:
+Run from `backend/`:
 
-| Command | Description |
+| Command | Purpose |
 | --- | --- |
-| `npm start` | Starts the Express API with Node.js |
-| `npm run dev` | Starts the API with Nodemon and reloads after file changes |
-| `npm run db:setup` | Creates missing tables and runs the safe database seed |
-| `npm run db:seed` | Idempotently seeds an existing database schema |
+| `npm start` | Start the Express API |
+| `npm run dev` | Start the API with Nodemon reloads |
+| `npm test` | Run backend unit and MySQL integration tests |
+| `npm run db:migrate` | Apply migrations added after the SQL baseline |
+| `npm run db:migrate:status` | Show applied and pending migrations |
+| `npm run db:migrate:undo` | Roll back the latest migration; back up data first |
+| `npm run db:migrate:undo:all` | Roll back all migrations; this can remove the full schema |
 
 ### Frontend
 
-Run these commands from `frontend/`:
+Run from `frontend/`:
 
-| Command | Description |
+| Command | Purpose |
 | --- | --- |
-| `npm start` | Starts the React development server |
-| `npm test` | Runs the Create React App test runner |
-| `npm run build` | Creates an optimized production build |
+| `npm start` | Start the React development server |
+| `npm test` | Run the React test suite |
+| `npm run build` | Create an optimized production build |
 
 ## Project structure
 
 ```text
 LnPulse/
 |-- backend/
-|   |-- config/       # Sequelize/database configuration
-|   |-- migrations/   # Database schema history
-|   |-- models/       # Sequelize models and relationships
-|   |-- seeders/
-|   |   `-- seed.js   # Single transactional, idempotent seeder
+|   |-- config/       # Environment-driven Sequelize CLI configuration
+|   |-- migrations/   # Consolidated baseline and later schema changes
+|   |-- models/       # Sequelize entities and relationships
 |   |-- src/
-|   |   |-- modules/  # API routes grouped by business domain
+|   |   |-- config/   # Runtime configuration
+|   |   |-- modules/  # Domain-grouped API routes
 |   |   |-- app.js    # Express application composition
-|   |   `-- server.js # Database and HTTP startup
-|   `-- index.js      # Minimal process entry point
+|   |   `-- server.js # Database authentication and HTTP startup
+|   |-- test/         # Backend and database-contract tests
+|   `-- README.md     # Detailed backend and database setup guide
+|-- database/
+|   `-- lnhs-sis.sql # Destructive fresh-install schema and baseline admin
 |-- frontend/
 |   |-- public/       # Static public assets
 |   `-- src/
 |       |-- app/      # Providers, routes, guards, and application shell
-|       |-- core/     # Cross-feature state and policy
+|       |-- core/     # Cross-feature state and policies
 |       |-- features/ # Screens grouped by business capability
 |       |-- shared/   # Reusable API and UI building blocks
 |       `-- styles/   # Global and transitional styles
@@ -183,9 +202,15 @@ LnPulse/
 `-- README.md
 ```
 
+## Documentation
+
+- [Backend and database setup](backend/README.md)
+- [Application architecture](ARCHITECTURE.md)
+- [Fresh-install SQL bootstrap](database/lnhs-sis.sql)
+
 ## Troubleshooting
 
-- **The backend cannot connect to MySQL:** Confirm that MySQL is running, the `lnhs-sis` database exists, and the credentials and port in `backend/config/config.json` match XAMPP.
-- **The frontend shows network errors:** Start the backend first and confirm that it is listening on port `3001`.
-- **A table does not exist in a new database:** Complete the one-time database initialization step above.
-- **Port `3000` or `3001` is already in use:** Stop the conflicting process, or set backend `PORT` and frontend `REACT_APP_API_URL` to matching values. Copy `frontend/.env.example` to `frontend/.env` for a local frontend override.
+- **The API cannot connect to MySQL:** Confirm the server is running and that `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` match the Workbench connection.
+- **A table is missing:** For a fresh installation, execute the complete SQL bootstrap. For an initialized installation, check `npm run db:migrate:status` for later pending migrations.
+- **The frontend reports network errors:** Start the backend first and confirm `REACT_APP_API_URL` points to its origin.
+- **Port `3000` or `3001` is occupied:** Stop the conflicting process or set matching backend `PORT` and frontend `REACT_APP_API_URL` values.
