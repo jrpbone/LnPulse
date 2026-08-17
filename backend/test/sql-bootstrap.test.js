@@ -76,7 +76,7 @@ test('the SQL bootstrap creates the complete baseline with only one admin', asyn
     );
     assert.equal(foreignKeySetting[0].enabled, 1);
   } finally {
-    await connection.query(`DROP DATABASE \`${testDatabase}\``);
+    await connection.query(`DROP DATABASE IF EXISTS \`${testDatabase}\``);
     await connection.end();
   }
 });

@@ -101,7 +101,7 @@ test('the SQL bootstrap schema matches the consolidated migration', async () => 
       assert.deepEqual(sqlSnapshot, migrationSnapshot);
     } finally {
       await adminConnection.query(
-        `DROP DATABASE ${mysql.escapeId(sqlDatabase)}`
+        `DROP DATABASE IF EXISTS ${mysql.escapeId(sqlDatabase)}`
       );
       await adminConnection.end();
     }
