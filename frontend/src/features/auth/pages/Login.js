@@ -119,7 +119,7 @@ function Login() {
       </section>
 
       <main className="login-panel">
-        <div className="login-card">
+        <div className="login-card" role="region" aria-label="Account sign in">
           <div className="mobile-login-brand">
             <img src="/logo192.png" alt="Ligao National High School seal" />
             <span>LN Pulse</span>
@@ -153,11 +153,8 @@ function Login() {
               </div>
             </div>
 
-            <div className="login-field">
-              <div className="login-label-row">
-                <label htmlFor="password">Password</label>
-                <a href="mailto:support@lnhs.edu?subject=Password%20reset">Forgot password?</a>
-              </div>
+            <div className="login-field login-password-field">
+              <label htmlFor="password">Password</label>
               <div className="login-input-wrap">
                 <FiLock aria-hidden="true" />
                 <input
@@ -182,6 +179,12 @@ function Login() {
                   {showPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
               </div>
+              <a
+                className="forgot-password"
+                href="mailto:support@lnhs.edu?subject=Password%20reset"
+              >
+                Forgot password?
+              </a>
             </div>
 
             <label className="modern-remember">
