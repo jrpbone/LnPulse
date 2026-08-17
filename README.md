@@ -83,24 +83,21 @@ Make sure the configured port matches the MySQL port shown in XAMPP. XAMPP often
 
 ### 3. Initialize a new database
 
-For a brand-new, empty database, open `backend/index.js` and temporarily change:
+For a brand-new, empty database, run the explicit setup command from `backend/`:
 
-```js
-const FORCE_SYNC = false
+```bash
+npm run db:setup
 ```
 
-to:
+This safely creates missing tables and runs the single database seeder. It does not drop existing tables or records.
 
-```js
-const FORCE_SYNC = true
+To apply the seed data to an existing schema, run:
+
+```bash
+npm run db:seed
 ```
 
-Start the backend once with `npm start`. This creates the tables and loads the project's initial departments, strands, sections, subjects, users, and sample student data. Stop the backend afterward and immediately change `FORCE_SYNC` back to `false`.
-
-> [!WARNING]
-> Starting the backend with `FORCE_SYNC = true` deletes all existing data. Use it only when initializing or intentionally resetting the local database.
-
-If the database has already been initialized, leave `FORCE_SYNC` set to `false` and skip this step.
+The seeder is deterministic, transactional, and idempotent: rerunning it fills in missing seed records without duplicating them, and a failure rolls back that run. Application startup never creates, resets, or seeds tables.
 
 ### 4. Start the backend
 
@@ -128,11 +125,11 @@ cd frontend
 npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in a browser. The frontend currently sends API requests to `http://localhost:3001`, so the backend must be running on that port.
+Open [http://localhost:3000](http://localhost:3000) in a browser. The frontend sends API requests to `http://localhost:3001` by default; set `REACT_APP_API_URL` when the backend uses another origin.
 
 ## Seeded development accounts
 
-When the initial data seeder runs, it creates department and adviser accounts with the development password `password123`. Example usernames include `tvl_head`, `feh_head`, `ams_head`, `humss_adviser`, `stem_adviser`, and `abm_adviser`.
+The seeder creates department and adviser accounts with the development password `password123`. Set `SEED_DEFAULT_PASSWORD` before the first seed to choose a different password. Existing account passwords are never overwritten by later seed runs. Example usernames include `tvl_head`, `feh_head`, `ams_head`, `humss_adviser`, `stem_adviser`, and `abm_adviser`.
 
 These credentials are for local development only. Change the passwords before using the application with real data.
 
@@ -146,6 +143,8 @@ Run these commands from `backend/`:
 | --- | --- |
 | `npm start` | Starts the Express API with Node.js |
 | `npm run dev` | Starts the API with Nodemon and reloads after file changes |
+| `npm run db:setup` | Creates missing tables and runs the safe database seed |
+| `npm run db:seed` | Idempotently seeds an existing database schema |
 
 ### Frontend
 
@@ -162,22 +161,25 @@ Run these commands from `frontend/`:
 ```text
 LnPulse/
 |-- backend/
-|   |-- config/       # Database configuration
-|   |-- migrations/   # Database migration files
+|   |-- config/       # Sequelize/database configuration
+|   |-- migrations/   # Database schema history
 |   |-- models/       # Sequelize models and relationships
-|   |-- routes/       # Express API routes
-|   |-- scripts/      # Data-loading scripts
-|   |-- seeders/      # Initial and sample data
-|   `-- index.js      # Backend entry point
+|   |-- seeders/
+|   |   `-- seed.js   # Single transactional, idempotent seeder
+|   |-- src/
+|   |   |-- modules/  # API routes grouped by business domain
+|   |   |-- app.js    # Express application composition
+|   |   `-- server.js # Database and HTTP startup
+|   `-- index.js      # Minimal process entry point
 |-- frontend/
 |   |-- public/       # Static public assets
 |   `-- src/
-|       |-- components/
-|       |-- config/
-|       |-- context/
-|       |-- images/
-|       |-- pages/
-|       `-- App.js    # Frontend routes and application shell
+|       |-- app/      # Providers, routes, guards, and application shell
+|       |-- core/     # Cross-feature state and policy
+|       |-- features/ # Screens grouped by business capability
+|       |-- shared/   # Reusable API and UI building blocks
+|       `-- styles/   # Global and transitional styles
+|-- ARCHITECTURE.md   # Module boundaries and extension guidance
 `-- README.md
 ```
 
@@ -186,4 +188,4 @@ LnPulse/
 - **The backend cannot connect to MySQL:** Confirm that MySQL is running, the `lnhs-sis` database exists, and the credentials and port in `backend/config/config.json` match XAMPP.
 - **The frontend shows network errors:** Start the backend first and confirm that it is listening on port `3001`.
 - **A table does not exist in a new database:** Complete the one-time database initialization step above.
-- **Port `3000` or `3001` is already in use:** Stop the conflicting process. The frontend API URLs are currently fixed to port `3001`, so changing only the backend port will require updating those URLs too.
+- **Port `3000` or `3001` is already in use:** Stop the conflicting process, or set backend `PORT` and frontend `REACT_APP_API_URL` to matching values. Copy `frontend/.env.example` to `frontend/.env` for a local frontend override.
